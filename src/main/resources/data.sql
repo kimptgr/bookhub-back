@@ -1,0 +1,4 @@
+INSERT INTO etats (libelle) VALUES ('DISPONIBLE');
+INSERT INTO etats (libelle) VALUES ('RESERVE');
+INSERT INTO etats (libelle) VALUES ('EMPRUNTE');
+INSERT INTO etats (libelle) VALUES ('INUTILISABLE');
