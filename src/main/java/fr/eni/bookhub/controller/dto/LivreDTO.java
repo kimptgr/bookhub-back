@@ -1,0 +1,30 @@
+package fr.eni.bookhub.controller.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public record LivreDTO(
+        @NotEmpty
+        List<AuteurDTO> auteurs,
+        @NotNull
+        String titre,
+        @NotNull
+        @Size(min = 10, max = 20)
+        String isbn,
+        @NotEmpty
+        List<Long> genres,
+        @NotNull
+        String synopsis,
+        @NotNull
+        Long idEtat,
+        String urlImage,
+        @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
+        LocalDate dateDeParution
+        ) {
+}
