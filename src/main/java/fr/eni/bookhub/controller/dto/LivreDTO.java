@@ -1,6 +1,8 @@
 package fr.eni.bookhub.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import fr.eni.bookhub.validator.Isbn;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,12 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record LivreDTO(
+        @Valid
         @NotEmpty
         List<AuteurDTO> auteurs,
         @NotNull
         String titre,
         @NotNull
-        @Size(min = 10, max = 20)
+        @Isbn
         String isbn,
         @NotEmpty
         List<Long> genres,
