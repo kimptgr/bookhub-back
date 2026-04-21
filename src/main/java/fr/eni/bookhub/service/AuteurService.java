@@ -38,6 +38,11 @@ public class AuteurService {
         return auteurOptional.orElseGet(() -> ajouterAuteur(auteur));
     }
 
+    /**
+     * Ajoute un auteur avec son nom en majuscule et son prénom en PascalCase
+     * @param auteur
+     * @return
+     */
     public Auteur ajouterAuteur(AuteurDTO auteur) {
         return auteurRepository.save(new Auteur(auteur.nomAuteur().toUpperCase(), convertToTitleCase(auteur.prenomAuteur())));
     }
