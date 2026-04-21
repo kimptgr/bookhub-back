@@ -3,7 +3,7 @@ package fr.eni.bookhub.utils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TexteFormateur {
+public class TextFormatter {
     public static String convertToTitleCase(String text) {
         if (text == null || text.isEmpty()) {
             return text;
@@ -25,5 +25,9 @@ public class TexteFormateur {
         }
 
         return converted.toString();
+    }
+
+    public static String isbnFormatteur(String isbn) {
+        return isbn.replace("-", "").trim();
     }
 }
