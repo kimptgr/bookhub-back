@@ -22,6 +22,6 @@ public class Avis {
 
     @ManyToOne
     @JoinColumn(name = "id_utilisateur", nullable = false)
-    private Utilisateur utilisateur;
+    private Utilisateur lecteur;
 
 }

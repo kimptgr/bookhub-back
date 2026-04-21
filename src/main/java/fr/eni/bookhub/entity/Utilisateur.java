@@ -32,6 +32,9 @@ public class Utilisateur {
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "utilisateur")
+    private List<Emprunt> emprunts;
+
+    @OneToMany(mappedBy = "lecteur")
     private List<Avis> avis;
 
     @Enumerated(EnumType.STRING)
