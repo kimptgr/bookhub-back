@@ -1,9 +1,9 @@
-package fr.eni.bookhub.controller.request;
+package fr.eni.bookhub.controller.dto;
 
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+public class InscriptionDTO {
     private String nom;
     private String prenom;
     private String email;

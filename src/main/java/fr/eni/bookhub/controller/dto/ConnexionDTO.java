@@ -1,10 +1,10 @@
-package fr.eni.bookhub.controller.request;
+package fr.eni.bookhub.controller.dto;
 
 
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class ConnexionDTO {
     private String email;
     private String password;
 }
