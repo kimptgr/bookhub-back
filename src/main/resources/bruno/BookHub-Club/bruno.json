@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "BookHub-Club",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

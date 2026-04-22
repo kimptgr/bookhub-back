@@ -1,0 +1,34 @@
+meta {
+  name: ajouterLivreSameAuteur_200
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/books
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "auteurs": [
+      {
+        "nomAuteur": "Thilliez",
+        "prenomAuteur": "Franck"
+      }], 
+    "titre": "Le manuscrit inachevé", 
+    "isbn": "9782265117808", 
+    "genres": [
+      1
+    ],
+    "synopsis": "Aux alentours de Grenoble, une voiture finit sa trajectoire dans un ravin. Dans le coffre, le corps d'une femme. À la station-service où a été vu le conducteur, la vidéosurveillance est claire : l'homme n'est pas le propriétaire du véhicule. Léane Morgan et Enaël Miraure sont une seule et même personne. L'institutrice reconvertie en reine du thriller a toujours tenu sa vie privée secrète : un mariage dont il ne reste rien sauf un lieu, << L'Inspirante >>, villa posée au bord des dunes de la Côte d'Opale, et le traumatisme de l'enlèvement de sa fille Sarah. L'agression soudaine de son mari va faire resurgir le pire. Dans le vent, le sable et le brouillard, une question parmi d'autres se pose : vers qui et vers quoi se tourner quand l'unique vérité est que tout vous devient étranger ?",
+    "idEtat": 2,
+    "urlImage": "https://www.babelio.com/couv/CVT_Le-manuscrit-inacheve_3149.jpg",
+    "dateDeParution": "03/05/2018"
+  }
+}
+
+docs {
+  This request retrieves a list of users from the JSONPlaceholder API.
+}
