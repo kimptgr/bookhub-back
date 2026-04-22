@@ -1,0 +1,15 @@
+meta {
+  name: allGenres_200
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{BASE_URL}}/genres
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
