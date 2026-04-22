@@ -1,11 +1,12 @@
 package fr.eni.bookhub.controller.dto;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class InscriptionDTO {
-    private String nom;
-    private String prenom;
-    private String email;
-    private String password;
+public record InscriptionDTO (
+        @NotBlank String nom,
+                  String prenom,
+        @NotBlank String email,
+        @NotBlank String password
+        ) {
+
 }

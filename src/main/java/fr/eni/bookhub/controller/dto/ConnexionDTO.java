@@ -1,10 +1,11 @@
 package fr.eni.bookhub.controller.dto;
 
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class ConnexionDTO {
-    private String email;
-    private String password;
+
+public record ConnexionDTO(
+        @NotBlank String email,
+        @NotBlank String password) {
 }
+
