@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-import static fr.eni.bookhub.utils.TextFormatter.isbnFormatteur;
+import static fr.eni.bookhub.utils.TextFormatter.isbnFormatter;
 
 @Validated
 @Service
@@ -33,7 +33,7 @@ public class LivreService {
     @Transactional
     public void ajoutLivre(@NotNull LivreDTO livreDTO) {
 
-        if (livreRepository.findByIsbn(isbnFormatteur(livreDTO.isbn())).isPresent()) {
+        if (livreRepository.findByIsbn(isbnFormatter(livreDTO.isbn())).isPresent()) {
             throw new LivreDejaExistantException(livreDTO.isbn());
         }
 

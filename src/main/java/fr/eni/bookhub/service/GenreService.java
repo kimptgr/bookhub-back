@@ -17,4 +17,7 @@ public class GenreService {
     public List<Genre> retrouverGenres(@NotEmpty List<Long> genres) {
         return genreRepository.findByIdIn(genres);
     }
+    public List<Genre> trouverTousLesGenres() {
+        return genreRepository.findAll();
+    }
 }

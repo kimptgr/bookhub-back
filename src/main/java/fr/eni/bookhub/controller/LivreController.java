@@ -15,6 +15,8 @@ public class LivreController {
 
     private final LivreService livreService;
 
+    //TODO delete qud security
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<Void> ajoutLivre(@Valid @RequestBody LivreDTO livreDTO) {
         livreService.ajoutLivre(livreDTO);

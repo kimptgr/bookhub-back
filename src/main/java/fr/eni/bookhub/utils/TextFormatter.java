@@ -27,7 +27,7 @@ public class TextFormatter {
         return converted.toString();
     }
 
-    public static String isbnFormatteur(String isbn) {
-        return isbn.replace("-", "").trim();
+    public static String isbnFormatter(String isbn) {
+        return isbn.replace("-", "").trim().toUpperCase();
     }
 }
