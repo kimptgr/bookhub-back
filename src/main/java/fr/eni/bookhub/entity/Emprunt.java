@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reservations")
+@Table(name = "emprunts")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Reservation {
+public class Emprunt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,19 +25,11 @@ public class Reservation {
     @JoinColumn(name = "id_utilisateur", nullable = false)
     private Utilisateur utilisateur;
 
-    private Integer rang;
-
     @Column(nullable = false)
-    private LocalDateTime dateDemandeReservation;
+    private LocalDate dateEmprunt;
 
-    private LocalDate dateDisponibilite;
+    private LocalDate dateRetourPrevisionnel;
 
-    private LocalDate dateRetraitMax;
-
-    @ManyToOne
-    @JoinColumn(name = "id_statut", nullable = false)
-    private Statut statut;
-
-    private boolean estSupprimee;
+    private LocalDate dateRetourEffectif;
 
 }
