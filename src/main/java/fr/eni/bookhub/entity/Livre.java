@@ -32,7 +32,7 @@ public class Livre {
     @Column(nullable = false)
     private List<Auteur> auteurs;
 
-    private LocalDate datePublication;
+    private LocalDate dateDeParution;
 
     @ManyToMany
     @JoinTable(name = "livres_genres",
@@ -43,6 +43,7 @@ public class Livre {
     private List<Genre> genres;
 
     @Column(nullable = false)
+    @Lob
     private String synopsis;
 
     @ManyToOne
