@@ -19,13 +19,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final UtilisateurService utilisateurService;
 
     public AuthService(UtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder,
-                       AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+                       AuthenticationManager authenticationManager, JwtUtils jwtUtils, UtilisateurService utilisateurService) {
         this.utilisateurRepository = utilisateurRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.utilisateurService = utilisateurService;
     }
 
     public void inscrire(InscriptionDTO request) {
@@ -51,7 +53,12 @@ public class AuthService {
             throw new BadCredentialsException("Email ou mot de passe incorrect");
         }
 
-        return jwtUtils.generateToken(request.email());
+        Utilisateur utilisateur = (Utilisateur) utilisateurService.loadUserByUsername(request.email());
+
+        return jwtUtils.generateToken(
+                utilisateur.getEmail(),
+                utilisateur.getId(),
+                utilisateur.getRole().name());
     }
 
     public void verifierEmailDisponible(String email) {

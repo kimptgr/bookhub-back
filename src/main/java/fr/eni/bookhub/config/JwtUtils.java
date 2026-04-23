@@ -9,6 +9,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+
 @Component
 public class JwtUtils {
 
@@ -17,9 +18,11 @@ public class JwtUtils {
 
     private static final long EXPIRATION_MS = 86400000; // 24 heures
 
-    public String generateToken(String email) {
+    public String generateToken(String email, Long id, String role ) {
         return Jwts.builder()
                 .subject(email)
+                .claim("id", id)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(getSigningKey())
