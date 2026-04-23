@@ -1,17 +1,12 @@
 package fr.eni.bookhub.controller;
 
-
-import fr.eni.bookhub.config.JwtUtils;
 import fr.eni.bookhub.controller.dto.ConnexionDTO;
 import fr.eni.bookhub.controller.dto.InscriptionDTO;
-import fr.eni.bookhub.entity.Utilisateur;
-import fr.eni.bookhub.repository.UtilisateurRepository;
+import fr.eni.bookhub.exception.EmailDejaUtiliseException;
+import fr.eni.bookhub.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,51 +18,31 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
-    private final UtilisateurRepository utilisateurRepository;
+    private final AuthService authService;
 
-    public AuthController(UtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
-        this.utilisateurRepository = utilisateurRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/inscription")
     public ResponseEntity<?> inscription(@RequestBody InscriptionDTO request) {
-        if (utilisateurRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.badRequest().body("Email déjà utilisé");
+        try {
+            authService.inscrire(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("message", "Compte créé avec succès"));
+        } catch (EmailDejaUtiliseException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setEmail(request.getEmail());
-        utilisateur.setNom(request.getNom());
-        utilisateur.setPrenom(request.getPrenom());
-        utilisateur.setMotDePasseChiffre(passwordEncoder.encode(request.getPassword()));
-        utilisateur.setRole(fr.eni.bookhub.entity.Utilisateur.Role.UTILISATEUR);
-        utilisateur.setDesactive(false);
-
-        utilisateurRepository.save(utilisateur);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message", "Compte créé avec succès"));
     }
 
     @PostMapping("/connexion")
     public ResponseEntity<?> connexion(@RequestBody ConnexionDTO request) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
+            String token = authService.connecter(request);
+            return ResponseEntity.ok(Map.of("token", token));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Email ou mot de passe incorrect"));
+                    .body(Map.of("message", e.getMessage()));
         }
-        String token = jwtUtils.generateToken(request.getEmail());
-        return ResponseEntity.ok(Map.of("token", token));
     }
-
 }
-
-
