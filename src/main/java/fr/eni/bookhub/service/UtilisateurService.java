@@ -1,6 +1,5 @@
 package fr.eni.bookhub.service;
 
-import fr.eni.bookhub.entity.Utilisateur;
 import fr.eni.bookhub.repository.UtilisateurRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
