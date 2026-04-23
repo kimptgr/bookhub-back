@@ -1,21 +1,21 @@
--- INSERT INTO etats (libelle) VALUES ('DISPONIBLE');
--- INSERT INTO etats (libelle) VALUES ('RESERVE');
--- INSERT INTO etats (libelle) VALUES ('EMPRUNTE');
--- INSERT INTO etats (libelle) VALUES ('INUTILISABLE');
+-- INSERT INTO etats (libelle) VALUES ('Disponible');
+-- INSERT INTO etats (libelle) VALUES ('Réservé');
+-- INSERT INTO etats (libelle) VALUES ('Emprunté');
+-- INSERT INTO etats (libelle) VALUES ('Inutilisable');
 --
--- INSERT INTO statuts (libelle) VALUES ('SUR_LISTE_D_ATTENTE');
--- INSERT INTO statuts (libelle) VALUES ('EN_ATTENTE_DE_RETRAIT');
--- INSERT INTO statuts (libelle) VALUES ('CLOTUREE');
--- INSERT INTO statuts (libelle) VALUES ('ANNULEE');
+-- INSERT INTO statuts (libelle) VALUES ('Sur liste d''attente');
+-- INSERT INTO statuts (libelle) VALUES ('En attente de retrait');
+-- INSERT INTO statuts (libelle) VALUES ('Cloturée');
+-- INSERT INTO statuts (libelle) VALUES ('Annulée');
 --
--- INSERT INTO genres (libelle) VALUES ('ART_POETIQUE');
--- INSERT INTO genres (libelle) VALUES ('ROMAN_POLICIER');
--- INSERT INTO genres (libelle) VALUES ('FANTAISIE');
--- INSERT INTO genres (libelle) VALUES ('THEATRE');
--- INSERT INTO genres (libelle) VALUES ('ARGUMENTATIF');
--- INSERT INTO genres (libelle) VALUES ('GRAPHIQUE');
--- INSERT INTO genres (libelle) VALUES ('SCIENCE_FICTION');
--- INSERT INTO genres (libelle) VALUES ('NOVELLA');
+-- INSERT INTO genres (libelle) VALUES ('Art poétique');
+-- INSERT INTO genres (libelle) VALUES ('Roman policier');
+-- INSERT INTO genres (libelle) VALUES ('Fantaisie');
+-- INSERT INTO genres (libelle) VALUES ('Théâtre');
+-- INSERT INTO genres (libelle) VALUES ('Argumentatif');
+-- INSERT INTO genres (libelle) VALUES ('Graphique');
+-- INSERT INTO genres (libelle) VALUES ('Science fiction');
+-- INSERT INTO genres (libelle) VALUES ('Novella');
 
 -- INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false,'jeanbono@gmail.com','admin123', 'Bono', 'Jean', 'ADMINISTRATEUR');
 -- INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false,'jeanemar@gmail.com','biblio123', 'Emar', 'Jean', 'BIBLIOTHECAIRE');
