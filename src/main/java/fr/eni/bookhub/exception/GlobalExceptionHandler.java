@@ -52,7 +52,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleLivreNotFound(
             LivreNotFoundException ex
     ) {
-        return ResponseEntity.badRequest()
-                .body(ex.getMessage());
+        return ResponseEntity.notFound().build();
     }
 }
