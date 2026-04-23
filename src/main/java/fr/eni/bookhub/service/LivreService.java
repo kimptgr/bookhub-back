@@ -7,13 +7,13 @@ import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
 import fr.eni.bookhub.exception.LivreDejaExistantException;
+import fr.eni.bookhub.exception.LivreNotFoundException;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
 import fr.eni.bookhub.specification.LivreSpecification;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 import static fr.eni.bookhub.utils.TextFormatter.isbnFormatter;
 
@@ -76,5 +75,9 @@ public class LivreService {
         livreSpecification = LivreSpecification.getSpecificationsForGenreAndEtat(rechercheDTO);
 
         return livreRepository.findAll(livreSpecification, pageRequest);
+    }
+
+    public Livre chercheLivreParId(Long id) {
+        return livreRepository.findById(id).orElseThrow(()-> new LivreNotFoundException(id));
     }
 }

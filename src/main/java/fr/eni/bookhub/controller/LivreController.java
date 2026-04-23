@@ -3,6 +3,7 @@ package fr.eni.bookhub.controller;
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.service.LivreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,11 @@ public class LivreController {
         livreService.ajoutLivre(livreDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Livre> chercheLivre(@PathVariable Long id) {
+        return ResponseEntity.ok(livreService.chercheLivreParId(id));
     }
 
     @GetMapping

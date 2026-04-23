@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface LivreRepository extends JpaRepository<Livre, Long>, JpaSpecificationExecutor<Livre> {
     Optional<Livre> findByIsbn(@NotNull String isbn);
-
+    Optional<Livre> findById(Long id);
 }
