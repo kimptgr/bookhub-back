@@ -37,15 +37,15 @@ public class AuthController {
 
     @PostMapping("/inscription")
     public ResponseEntity<?> inscription(@RequestBody InscriptionDTO request) {
-        if (utilisateurRepository.existsByEmail(request.getEmail())) {
+        if (utilisateurRepository.existsByEmail(request.email())) {
             return ResponseEntity.badRequest().body("Email déjà utilisé");
         }
 
         Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setEmail(request.getEmail());
-        utilisateur.setNom(request.getNom());
-        utilisateur.setPrenom(request.getPrenom());
-        utilisateur.setMotDePasseChiffre(passwordEncoder.encode(request.getPassword()));
+        utilisateur.setEmail(request.email());
+        utilisateur.setNom(request.nom());
+        utilisateur.setPrenom(request.prenom());
+        utilisateur.setMotDePasseChiffre(passwordEncoder.encode(request.password()));
         utilisateur.setRole(fr.eni.bookhub.entity.Utilisateur.Role.UTILISATEUR);
         utilisateur.setDesactive(false);
 
@@ -58,13 +58,13 @@ public class AuthController {
     public ResponseEntity<?> connexion(@RequestBody ConnexionDTO request) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Email ou mot de passe incorrect"));
         }
-        String token = jwtUtils.generateToken(request.getEmail());
+        String token = jwtUtils.generateToken(request.email());
         return ResponseEntity.ok(Map.of("token", token));
     }
 
