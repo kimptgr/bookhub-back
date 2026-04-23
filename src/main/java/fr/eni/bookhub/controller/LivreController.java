@@ -5,6 +5,7 @@ import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.service.LivreService;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,11 +35,11 @@ public class LivreController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Livre>> rechercherLivres(@RequestParam String saisie,
-                                                           @RequestParam String genres,
-                                                           @RequestParam String disponibilite,
-                                                           @RequestParam Integer page,
-                                                           @RequestParam Integer size) {
+    public ResponseEntity<Page<Livre>> rechercherLivres(@Nullable @RequestParam String saisie,
+                                                       @RequestParam String genres,
+                                                       @RequestParam String disponibilite,
+                                                       @RequestParam Integer page,
+                                                       @RequestParam Integer size) {
 
         RechercheDTO rechercheDTO = new RechercheDTO(saisie, genres.split(","), disponibilite);
 
