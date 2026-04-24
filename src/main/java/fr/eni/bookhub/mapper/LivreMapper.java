@@ -15,7 +15,11 @@ public class LivreMapper {
         livre.setTitre(dto.titre());
         livre.setDateDeParution(dto.dateDeParution());
         livre.setSynopsis(dto.synopsis());
-        livre.setUrlImage(dto.urlImage());
+        if (dto.urlImage() == null || dto.urlImage().isEmpty()) {
+            livre.setUrlImage("https://picsum.photos/200");
+        }
+            livre.setUrlImage(dto.urlImage());
+
         return livre;
     }
 
