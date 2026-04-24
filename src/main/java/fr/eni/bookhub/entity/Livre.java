@@ -1,11 +1,14 @@
 package fr.eni.bookhub.entity;
 
+import fr.eni.bookhub.controller.dto.AuteurDTO;
+import fr.eni.bookhub.controller.dto.LivreDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,8 +46,7 @@ public class Livre {
     @Column(nullable = false)
     private List<Genre> genres;
 
-    @Column(nullable = false)
-    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String synopsis;
 
     @ManyToOne
@@ -60,4 +62,25 @@ public class Livre {
 
     private String urlImage;
 
+//    public LivreDTO toDTO() {
+//        List<AuteurDTO> auteurDTOs = new ArrayList<>();
+//        for (Auteur auteur : this.auteurs) {
+//            auteurDTOs.add(auteur.toDTO());
+//        }
+//
+//        List<Long> idGenres = new ArrayList<>();
+//        for (Genre genre : this.genres) {
+//            idGenres.add(genre.getId());
+//        }
+//
+//        return new LivreDTO(auteurDTOs,
+//                            this.titre,
+//                            this.isbn,
+//                            idGenres,
+//                            this.synopsis,
+//                            this.getEtat().getId(),
+//                            this.getUrlImage(),
+//                            this.dateDeParution
+//        );
+//    }
 }

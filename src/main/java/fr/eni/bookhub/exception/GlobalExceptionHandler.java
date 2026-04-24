@@ -47,4 +47,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(LivreNotFoundException.class)
+    public ResponseEntity<String> handleLivreNotFound(
+            LivreNotFoundException ex
+    ) {
+        return ResponseEntity.badRequest()
+                .body(ex.getMessage());
+    }
 }

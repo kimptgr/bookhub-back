@@ -1,5 +1,6 @@
 package fr.eni.bookhub.entity;
 
+import fr.eni.bookhub.controller.dto.AuteurDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +26,7 @@ public class Auteur {
         this.prenom = prenom;
     }
 
+    public AuteurDTO toDTO() {
+        return new AuteurDTO(this.nom, this.prenom);
+    }
 }
