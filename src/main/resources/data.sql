@@ -8,11 +8,18 @@
 -- INSERT INTO statuts (libelle) VALUES ('CLOTUREE');
 -- INSERT INTO statuts (libelle) VALUES ('ANNULEE');
 --
--- INSERT INTO genres (libelle) VALUES ('ART_POETIQUE');
 -- INSERT INTO genres (libelle) VALUES ('ROMAN_POLICIER');
+-- INSERT INTO genres (libelle) VALUES ('ART_POETIQUE');
 -- INSERT INTO genres (libelle) VALUES ('FANTAISIE');
 -- INSERT INTO genres (libelle) VALUES ('THEATRE');
 -- INSERT INTO genres (libelle) VALUES ('ARGUMENTATIF');
 -- INSERT INTO genres (libelle) VALUES ('GRAPHIQUE');
 -- INSERT INTO genres (libelle) VALUES ('SCIENCE_FICTION');
 -- INSERT INTO genres (libelle) VALUES ('NOVELLA');
+--
+-- insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false, 'mtartine@dej.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Tartine', 'Marie', 'UTILISATEUR');
+--
+-- INSERT INTO auteurs (nom, prenom) VALUES ('PERRIN', 'Valérie');
+-- INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis) VALUES ('24/04/2019', 1, '9782253238027', 'Changer l''eau des fleurs', 'https://www.babelio.com/couv/CVT_Changer-leau-des-fleurs_5277.jpg', 'Violette Toussaint est garde-cimetière dans une petite ville de Bourgogne. Les gens de passage et les habitués viennent se confier et se réchauffer dans sa loge. Avec la petite équipe de fossoyeurs et le jeune curé, elle forme une famille décalée. Mais quels événements ont mené Violette dans cet univers où le tragique et le cocasse s’entremêlent ?Après le succès des  Oubliés du dimanche, un nouvel hymne au merveilleux des choses simples.');
+-- INSERT INTO livres_genres (id_livre, id_genre) VALUES (1, 1);
+-- INSERT INTO livres_auteurs (id_livre, id_auteur) VALUES (1, 1);
