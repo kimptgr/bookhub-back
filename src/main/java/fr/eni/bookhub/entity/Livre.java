@@ -35,7 +35,7 @@ public class Livre {
     @Column(nullable = false)
     private List<Auteur> auteurs;
 
-    @Column(name="date_publication", nullable = false)
+
     private LocalDate dateDeParution;
 
     @ManyToMany
