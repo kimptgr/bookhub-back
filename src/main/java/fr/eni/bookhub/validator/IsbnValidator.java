@@ -1,0 +1,27 @@
+package fr.eni.bookhub.validator;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+// ConstraintValidator indique nom de l'annotation et type du champ
+public class IsbnValidator implements ConstraintValidator<Isbn, String> {
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+
+        if (value == null || value.isBlank()) return true;
+        String isbn = value.trim().replace("-", "").toUpperCase();
+
+        if (isbn.length() == 13 && isbn.matches("\\d{13}") && (isbn.startsWith("978") || isbn.startsWith("979"))) {
+            return true;
+        }
+        if (isbn.length() == 10 && isbn.matches("\\d{10}|\\d{9}X")
+        ) {
+            return true;
+
+        }
+        return false;
+        //return isbn.matches(("\\d{10}|\\d{13}|\\d{9}X"));
+
+    }
+}

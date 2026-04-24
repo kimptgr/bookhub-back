@@ -1,0 +1,15 @@
+meta {
+  name: getBookById_200
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{BASE_URL}}/books/1
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

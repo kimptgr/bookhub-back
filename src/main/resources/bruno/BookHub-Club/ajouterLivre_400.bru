@@ -1,0 +1,37 @@
+meta {
+  name: ajouterLivre_400
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/books
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "auteurs": [
+      {
+        "nomAuteur": "",
+        "prenomAuteur": "Victor"
+      },
+      {
+        "nomAuteur": "Dumas",
+        "prenomAuteur": "Alexandre"
+      }
+    ],
+    "titre": "Les grands classiques de la littérature française",
+    "isbn": "978-20704-0-90n18",
+    "genres": [],
+    "synopsis": "Une œuvre regroupant plusieurs textes majeurs de la littérature française.",
+    "idEtat": null,
+    "urlImage": "https://exemple.com/images/livre.jpg",
+    "dateDeParution": "15/04/2024"
+  }
+}
+
+docs {
+  This request retrieves a list of users from the JSONPlaceholder API.
+}

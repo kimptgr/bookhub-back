@@ -1,0 +1,24 @@
+meta {
+  name: Recherche livres
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{BASE_URL}}/books?saisie=&genres=&disponibilite=&page=0&size=20
+  body: none
+  auth: inherit
+}
+
+params:query {
+  saisie: 
+  genres: 
+  disponibilite: 
+  page: 0
+  size: 20
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
