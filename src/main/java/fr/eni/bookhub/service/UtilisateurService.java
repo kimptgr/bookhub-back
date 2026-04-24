@@ -1,6 +1,8 @@
 package fr.eni.bookhub.service;
 
+import fr.eni.bookhub.entity.Utilisateur;
 import fr.eni.bookhub.repository.UtilisateurRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +22,11 @@ public class UtilisateurService implements UserDetailsService {
 
         return utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé : " + email));
+    }
+
+    public Utilisateur loadUserById(Long id) {
+        return utilisateurRepository.findByIdAndDesactivateIsFalse(id)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé : " + id));
     }
 
 }
