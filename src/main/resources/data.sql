@@ -16,8 +16,3 @@
 -- INSERT INTO genres (libelle) VALUES ('GRAPHIQUE');
 -- INSERT INTO genres (libelle) VALUES ('SCIENCE_FICTION');
 -- INSERT INTO genres (libelle) VALUES ('NOVELLA');
-
--- INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false,'jeanbono@gmail.com','admin123', 'Bono', 'Jean', 'ADMINISTRATEUR');
--- INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false,'jeanemar@gmail.com','biblio123', 'Emar', 'Jean', 'BIBLIOTHECAIRE');
--- INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false,'jeanbonboeur@gmail.com','user123', 'Bonboeur', 'Jean', 'UTILISATEUR');
--- INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role) VALUES (false,'jeanracine@gmail.com','user123', 'Racine', 'Jean', 'UTILISATEUR');
