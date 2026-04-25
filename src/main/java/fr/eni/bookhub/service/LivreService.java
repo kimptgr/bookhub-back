@@ -57,22 +57,21 @@ public class LivreService {
         livreRepository.save(livre);
     }
 
-    public Page<Livre> rechercheLivres(RechercheDTO rechercheDTO, Integer page, Integer size) {
+    public Page<Livre> rechercheLivres(RechercheDTO rechercheDTO, int numeroPage, int taillePage) {
 
         Specification<Livre> livreSpecification;
         PageRequest pageRequest;
 
-        // Cas où on a saisi un ISBN, on ignore les filtres et le Pageable
+        // Cas où on a saisi un ISBN, on ignore les filtres et les éléments de pagination
         if (rechercheDTO.saisie().matches("^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$")) {
             livreSpecification = LivreSpecification.getSpecificationsForIsbn(rechercheDTO.saisie());
             pageRequest = PageRequest.of(0, 20);
 
-            return livreRepository.findAll(livreSpecification, pageRequest);
+        } else {
+            // Cas où on recherche par titre ou auteur·ice, on applique les filtres de genre et d'état
+            livreSpecification = LivreSpecification.getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(rechercheDTO);
+            pageRequest = PageRequest.of(numeroPage, taillePage, Sort.by("titre").ascending());
         }
-
-        // Cas où on recherche par titre ou auteur·ice
-        pageRequest = PageRequest.of(page, size, Sort.by("titre").ascending());
-        livreSpecification = LivreSpecification.getSpecificationsForGenreAndEtat(rechercheDTO);
 
         return livreRepository.findAll(livreSpecification, pageRequest);
     }
