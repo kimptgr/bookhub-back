@@ -25,7 +25,7 @@ public class UtilisateurService implements UserDetailsService {
     }
 
     public Utilisateur loadUserById(Long id) {
-        return utilisateurRepository.findByIdAndDesactivateIsFalse(id)
+        return utilisateurRepository.findByIdAndDesactiveIsFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé : " + id));
     }
 
