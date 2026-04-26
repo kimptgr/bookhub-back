@@ -7,22 +7,20 @@ import fr.eni.bookhub.entity.Livre;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class LivreSpecification {
-
-    private LivreSpecification() {
-        /* This utility class should not be instantiated */
-    }
 
     /**
      * Crée une Spécification, c'est un système de filtrage dynamique qui peut être interprété par JPA, celui-ci filtre par Genre et/ou État et/ou Titre et/ou Nom d'auteur⋅ice
      *
      * @see <a href="https://medium.com/devxtalks/implementing-pagination-sorting-and-filtering-in-spring-boot-42615dbd74a7">Exemple sur medium dont je me suis inspiré</a>
      */
-    public static Specification<Livre> getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(RechercheDTO rechercheDTO) {
+    public Specification<Livre> getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(RechercheDTO rechercheDTO) {
 
         return (root, query, criteriaBuilder) -> {
 
@@ -35,7 +33,7 @@ public class LivreSpecification {
 
             // Si on a un critère sur les genres
             if (rechercheDTO.libellesGenres() != null && rechercheDTO.libellesGenres().length > 0 && !rechercheDTO.libellesGenres()[0].isBlank()) {
-                Join<Livre, Genre> genreJoin = root.join("libellesGenres");
+                Join<Livre, Genre> genreJoin = root.join("genres");
                 predicates.add(genreJoin.get("libelle").in((Object[]) rechercheDTO.libellesGenres()));
 
                 // On évite les duplicats si le livre correspond à deux genres
@@ -63,7 +61,7 @@ public class LivreSpecification {
     /**
      * Crée une Spécification, c'est un système de filtrage dynamique qui peut être interprété par JPA, celui-ci filtre par isbn
      */
-    public static Specification<Livre> getSpecificationsForIsbn(String isbn) {
+    public Specification<Livre> getSpecificationsForIsbn(String isbn) {
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.equal(root.get("isbn"), isbn);
     }

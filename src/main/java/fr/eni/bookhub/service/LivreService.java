@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static fr.eni.bookhub.utils.TextFormatter.isbnFormatter;
 
@@ -35,7 +37,12 @@ public class LivreService {
     private final GenreService genreService;
     private final EtatService etatService;
 
+    private final LivreSpecification livreSpecification;
+
     private final LivreRepository livreRepository;
+
+    // Vérifie que la string ressemble à un ISBN, cette regex peut matcher avec des ISBN non valides
+    private static final Pattern isbnPattern = Pattern.compile("[0-9\\- ]{10,17}X?");
 
     @Transactional
     public void ajoutLivre(@NotNull LivreDTO livreDTO) {
@@ -59,21 +66,22 @@ public class LivreService {
 
     public Page<Livre> rechercheLivres(RechercheDTO rechercheDTO, int numeroPage, int taillePage) {
 
-        Specification<Livre> livreSpecification;
+        Specification<Livre> specification;
         PageRequest pageRequest;
+        Matcher isbnMatcher = isbnPattern.matcher(rechercheDTO.saisie());
 
         // Cas où on a saisi un ISBN, on ignore les filtres et les éléments de pagination
-        if (rechercheDTO.saisie().matches("^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$")) {
-            livreSpecification = LivreSpecification.getSpecificationsForIsbn(rechercheDTO.saisie());
+        if (isbnMatcher.matches()) {
+            specification = livreSpecification.getSpecificationsForIsbn(rechercheDTO.saisie());
             pageRequest = PageRequest.of(0, 20);
 
         } else {
             // Cas où on recherche par titre ou auteur·ice, on applique les filtres de genre et d'état
-            livreSpecification = LivreSpecification.getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(rechercheDTO);
+            specification = livreSpecification.getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(rechercheDTO);
             pageRequest = PageRequest.of(numeroPage, taillePage, Sort.by("titre").ascending());
         }
 
-        return livreRepository.findAll(livreSpecification, pageRequest);
+        return livreRepository.findAll(specification, pageRequest);
     }
 
     public Livre chercheLivreParId(Long id) {
