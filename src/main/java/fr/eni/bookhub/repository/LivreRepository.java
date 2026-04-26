@@ -1,5 +1,6 @@
 package fr.eni.bookhub.repository;
 
+import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface LivreRepository extends JpaRepository<Livre, Long>, JpaSpecificationExecutor<Livre> {
-    Optional<Livre> findByIsbn(@NotNull String isbn);
     Optional<Livre> findById(Long id);
+    Optional<Livre> findByIsbn(@NotNull String isbn);
+    Optional<Livre> findByIdAndEtatLibelleNot(Long id, Etat.Code labelEtat);
 }

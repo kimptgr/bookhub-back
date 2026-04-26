@@ -3,11 +3,12 @@ package fr.eni.bookhub.service;
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.entity.Auteur;
+import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
 import fr.eni.bookhub.exception.LivreDejaExistantException;
-import fr.eni.bookhub.exception.LivreNotFoundException;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
 import fr.eni.bookhub.specification.LivreSpecification;
@@ -32,7 +33,9 @@ public class LivreService {
     private final LivreMapper livreMapper;
 
     private final AuteurService auteurService;
+
     private final GenreService genreService;
+
     private final EtatService etatService;
 
     private final LivreRepository livreRepository;
@@ -49,7 +52,7 @@ public class LivreService {
         livre.setAuteurs(auteurs);
         List<Genre> genres = genreService.retrouverGenres(livreDTO.genres());
         if (genres.size() != livreDTO.genres().size())
-            throw new GenresNonCorrespondantException("");
+            throw new GenresNonCorrespondantException();
 
         livre.setGenres(genres);
         livre.setEtat(etatService.retrouveEtat(livreDTO.idEtat()));
@@ -78,6 +81,16 @@ public class LivreService {
     }
 
     public Livre chercheLivreParId(Long id) {
-        return livreRepository.findById(id).orElseThrow(()-> new LivreNotFoundException(id));
+        return livreRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Livre avec l'id " + id + " n'existe pas"));
+    }
+
+    public Livre chercheLivreParIdEtUtilisable(Long id) {
+        return livreRepository.findByIdAndEtatLibelleNot(id, Etat.Code.INUTILISABLE).orElseThrow(() -> new ElementNotFoundException("Livre non trouvé (id: " + id + ")"));
+    }
+
+    public void updateEtat(Livre livre, Etat.Code etatLabel) {
+        Etat etat = etatService.retrouveEtatParLibelle(etatLabel);
+        livre.setEtat(etat);
+        livreRepository.save(livre);
     }
 }
