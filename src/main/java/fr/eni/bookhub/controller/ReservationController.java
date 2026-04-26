@@ -5,6 +5,7 @@ import fr.eni.bookhub.entity.Utilisateur;
 import fr.eni.bookhub.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,16 +23,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Void> ajoutReservation(
-            //@AuthenticationPrincipal Utilisateur user,
+            @AuthenticationPrincipal Utilisateur utilisateur,
             @RequestBody ReservationDTO reservationDTO) throws AccessDeniedException {
-        //TODO delete quand @AuthenticationPrincipal is implemented
-        Utilisateur utilisateur = null;
-        if (utilisateur == null) {
-            utilisateur = new Utilisateur();
-            utilisateur.setEmail("mtartine@dej.com");
-            utilisateur.setId(1L);
-            utilisateur.setRole(Utilisateur.Role.ADMINISTRATEUR);
-        }
 
         LocalDateTime dateReservation = LocalDateTime.now();
 
