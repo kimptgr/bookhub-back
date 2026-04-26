@@ -1,5 +1,6 @@
 package fr.eni.bookhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.eni.bookhub.controller.dto.AuteurDTO;
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import jakarta.persistence.*;
