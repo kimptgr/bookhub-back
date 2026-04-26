@@ -14,10 +14,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreService {
     private final GenreRepository genreRepository;
+
     public List<Genre> retrouverGenres(@NotEmpty List<Long> genres) {
         return genreRepository.findByIdIn(genres);
     }
+
     public List<Genre> trouverTousLesGenres() {
-        return genreRepository.findAll();
+        return genreRepository.findAllfindAllByOrderByLibelleAsc();
     }
 }
