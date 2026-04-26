@@ -1,19 +1,22 @@
 package fr.eni.bookhub.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> gestionDeLaValidation(
+    public ResponseEntity<APIError> gestionDeLaValidation(
             MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
@@ -21,37 +24,58 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
-
-        return ResponseEntity.badRequest().body(errors);
+        log.error(errors.toString());
+        return ResponseEntity.status(400).body(new APIError("400", errors.toString(), Instant.now()));
     }
 
     @ExceptionHandler(LivreDejaExistantException.class)
-    public ResponseEntity<String> gereLivreDejaExistant (LivreDejaExistantException ex) {
-        return ResponseEntity.status(409).body("Livre déjà existant: "+ex.getMessage());
+    public ResponseEntity<APIError> gereLivreDejaExistant(LivreDejaExistantException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(409).body(
+                new APIError("409", ex.getMessage(), Instant.now()
+                ));
     }
 
-    @ExceptionHandler(EtatNonExistantException.class)
-    public ResponseEntity<String> gereEtatNonExistant (EtatNonExistantException ex) {
-        return ResponseEntity.status(400).body("Cet état n'existe pas: " + ex.getMessage());
-    }
 
     @ExceptionHandler(GenresNonCorrespondantException.class)
-    public ResponseEntity<String> gereGenreInexistant(GenresNonCorrespondantException ex) {
-        return ResponseEntity.badRequest().body("Les genres ne correspondent pas.");
+    public ResponseEntity<APIError> gereGenreInexistant(GenresNonCorrespondantException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(400).body(new APIError("400", ex.getMessage(), Instant.now()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleConstraintViolation(
+    public ResponseEntity<APIError> handleConstraintViolation(
             ConstraintViolationException ex
     ) {
-        return ResponseEntity.badRequest()
-                .body(ex.getMessage());
+        log.error(ex.getMessage());
+        return ResponseEntity.status(400).body(new APIError("400", ex.getMessage(), Instant.now()));
     }
 
-    @ExceptionHandler(LivreNotFoundException.class)
-    public ResponseEntity<String> handleLivreNotFound(
-            LivreNotFoundException ex
+    @ExceptionHandler(ElementNotFoundException.class)
+    public ResponseEntity<APIError> handleElementNotFound(
+            ElementNotFoundException ex
     ) {
-        return ResponseEntity.notFound().build();
+        log.error(ex.getMessage());
+        return ResponseEntity.status(404).body(new APIError("404", ex.getMessage(), Instant.now()));
+    }
+
+    @ExceptionHandler(UtilisateurADejaReserveCelivreException.class)
+    public ResponseEntity<APIError> handleResaYetPresent(
+            UtilisateurADejaReserveCelivreException ex
+    ) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(409).body(
+                new APIError("409", ex.getMessage(), Instant.now()
+                ));
+    }
+
+    @ExceptionHandler(UtilisateurATropDeReservationsException.class)
+    public ResponseEntity<APIError> handleResaYetPresent(
+            UtilisateurATropDeReservationsException ex
+    ) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(409).body(
+                new APIError("409", ex.getMessage(), Instant.now()
+                ));
     }
 }
