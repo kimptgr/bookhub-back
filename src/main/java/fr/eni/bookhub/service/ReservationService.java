@@ -1,6 +1,7 @@
 package fr.eni.bookhub.service;
 
 import fr.eni.bookhub.controller.dto.ReservationDTO;
+import fr.eni.bookhub.controller.dto.ReservationResponseDTO;
 import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.entity.Reservation;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +25,9 @@ public class ReservationService {
 
     private final LivreService livreService;
 
-    private final ReservationRepository reservationRepository;
-
     private final ReservationFactory reservationFactory;
+
+    private final ReservationRepository reservationRepository;
 
     private final UtilisateurService utilisateurService;
 
@@ -74,6 +76,7 @@ public class ReservationService {
 
     /**
      * Vérifie que l'utilisateur n'est pas déjà sur la liste d'attente du livre
+     *
      * @param livre
      * @param reservateur
      */
@@ -92,6 +95,7 @@ public class ReservationService {
 
     /**
      * Vérifie que le reservateur n'a pas déjà atteint son quota.
+     *
      * @param reservateur
      */
     private void verifieReservationsEnCours(Utilisateur reservateur) {
@@ -109,6 +113,7 @@ public class ReservationService {
 
     /**
      * Retourne le rang auquel se trouve la réservation
+     *
      * @param livre
      * @return
      */
@@ -118,4 +123,25 @@ public class ReservationService {
         return reservationsCount + 1;
     }
 
+    /**
+     * Récupère les réservationsDTO par utilisateur qui ne sont pas supprimées
+     *
+     * @param utilisateur
+     * @return
+     */
+    public List<ReservationResponseDTO> recupererReservationsParUtilisateur(Utilisateur utilisateur) {
+        return reservationRepository.findByUtilisateurAndEstSupprimee(utilisateur, false).stream().map(
+                reservation -> new ReservationResponseDTO(
+                        reservation.getId(),
+                        reservation.getLivre().getId(),
+                        reservation.getUtilisateur().getId(),
+                        reservation.getRang(),
+                        reservation.getDateDemandeReservation(),
+                        reservation.getDateDisponibilite(),
+                        reservation.getDateRetraitMax(),
+                        reservation.getStatut().getLibelle().toString(),
+                        reservation.isEstSupprimee()
+                )
+        ).toList();
+    }
 }

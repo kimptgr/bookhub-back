@@ -1,5 +1,6 @@
 package fr.eni.bookhub.repository;
 
+import fr.eni.bookhub.controller.dto.ReservationResponseDTO;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.entity.Reservation;
 import fr.eni.bookhub.entity.Utilisateur;
@@ -21,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     int findMaxRange(Livre livre);
 
     int countByUtilisateurAndEstSupprimeeIsFalse(Utilisateur utilisateur);
+
+    List<Reservation> findByUtilisateurAndEstSupprimee(Utilisateur utilisateur, boolean supprimee);
 }
