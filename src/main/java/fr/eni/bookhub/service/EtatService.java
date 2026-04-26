@@ -1,7 +1,7 @@
 package fr.eni.bookhub.service;
 
 import fr.eni.bookhub.entity.Etat;
-import fr.eni.bookhub.exception.EtatNonExistantException;
+import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.repository.EtatRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,11 @@ public class EtatService {
     private final EtatRepository etatRepository;
 
     public Etat retrouveEtat(@NotNull Long id) {
-        return etatRepository.findById(id).orElseThrow(() -> new EtatNonExistantException(id.toString()));
+        return etatRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Etat non trouvé: " + id));
+    }
+
+    public Etat retrouveEtatParLibelle(Etat.Code label) {
+        return etatRepository.findByLibelle(label).orElseThrow(() -> new ElementNotFoundException("Etat non trouvé: " + label));
     }
 
     public @Nullable List<Etat> trouverTousLesEtats() {

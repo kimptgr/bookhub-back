@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface EtatRepository extends JpaRepository<Etat, Long> {
     Optional<Etat> findById(Long id);
     List<Etat> findAll();
+    Optional<Etat> findByLibelle(Etat.Code label);
 }
