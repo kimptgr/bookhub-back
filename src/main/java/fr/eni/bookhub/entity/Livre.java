@@ -1,11 +1,14 @@
 package fr.eni.bookhub.entity;
 
+import fr.eni.bookhub.controller.dto.AuteurDTO;
+import fr.eni.bookhub.controller.dto.LivreDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,8 +39,8 @@ public class Livre {
 
     @ManyToMany
     @JoinTable(name = "livres_genres",
-            joinColumns = @JoinColumn(name = "id_genre"),
-            inverseJoinColumns = @JoinColumn(name = "id_livre")
+            joinColumns = @JoinColumn(name = "id_livre"),
+            inverseJoinColumns = @JoinColumn(name = "id_genre")
     )
     @Column(nullable = false)
     private List<Genre> genres;
@@ -49,6 +52,7 @@ public class Livre {
     @JoinColumn(name = "id_etat", nullable = false)
     private Etat etat;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "livre")
     private List<Reservation> reservations;
 
