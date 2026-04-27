@@ -213,7 +213,8 @@ VALUES ('2025-11-06',
         'https://m.media-amazon.com/images/I/41SdgcTkCFL._SX195_.jpg',
         'Recueil de nouvelles inédites réunissant plusieurs auteurs français contemporains. Comme chaque année, le projet 13 à table ! associe le plaisir de lire à une action solidaire, au profit des Restos du Cœur.');
 
-
+INSERT INTO livres_genres (id_livre, id_genre)
+VALUES (12, 9);
 INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (12, 1);
 INSERT INTO livres_auteurs (id_livre, id_auteur)
