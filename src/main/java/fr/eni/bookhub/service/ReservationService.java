@@ -8,6 +8,7 @@ import fr.eni.bookhub.entity.Reservation;
 import fr.eni.bookhub.entity.Utilisateur;
 import fr.eni.bookhub.exception.UtilisateurADejaReserveCelivreException;
 import fr.eni.bookhub.exception.UtilisateurATropDeReservationsException;
+import fr.eni.bookhub.exception.emprunt.PasPremierSurListeDAttenteException;
 import fr.eni.bookhub.factory.ReservationFactory;
 import fr.eni.bookhub.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
@@ -143,5 +144,24 @@ public class ReservationService {
                         reservation.isEstSupprimee()
                 )
         ).toList();
+    }
+
+    /**
+     * Vérifie que l'utilisateur est le premier sur la liste d'attente du livre et met à jour les réservations
+     * (état supprimé pour la réservation de l'emprunteur et rang -1 aux autres)
+     * @param livre
+     * @param emprunteur
+     */
+    public void updateReservationLieesAuLivre(Livre livre, Utilisateur emprunteur) {
+        List<Reservation> reservationList = reservationRepository.findAllByLivreAndEstSupprimeeIsFalse(livre);
+
+        reservationList.forEach((reservation) -> {
+            reservation.setRang(reservation.getRang() - 1);
+            if (reservation.getUtilisateur().getId().equals(
+                    emprunteur.getId()) && reservation.getRang() != 1) throw new PasPremierSurListeDAttenteException();
+            if (reservation.getUtilisateur().getId().equals(
+                    emprunteur.getId())) reservation.setEstSupprimee(true);
+        });
+        reservationRepository.saveAll(reservationList);
     }
 }

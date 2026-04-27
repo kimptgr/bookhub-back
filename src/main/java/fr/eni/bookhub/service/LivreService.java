@@ -100,4 +100,8 @@ public class LivreService {
         livre.setEtat(etat);
         livreRepository.save(livre);
     }
+
+    public Livre chercheLivreParIdEtDisponible(Long id) {
+        return livreRepository.findByIdAndEtatLibelle(id, Etat.Code.DISPONIBLE).orElseThrow(() -> new ElementNotFoundException("Livre non trouvé (id: " + id + ")"));
+    }
 }

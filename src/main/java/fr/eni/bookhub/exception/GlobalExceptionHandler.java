@@ -1,5 +1,9 @@
 package fr.eni.bookhub.exception;
 
+import fr.eni.bookhub.exception.emprunt.LivreDejaEmprunteException;
+import fr.eni.bookhub.exception.emprunt.PasPremierSurListeDAttenteException;
+import fr.eni.bookhub.exception.emprunt.UtilisateurADuRetardException;
+import fr.eni.bookhub.exception.emprunt.UtilisateurATropDEmpruntsException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -88,4 +92,41 @@ public class GlobalExceptionHandler {
                 new APIError("200", ex.getMessage(), Instant.now()
                 ));
     }
+
+    @ExceptionHandler(UtilisateurADuRetardException.class)
+    public ResponseEntity<APIError> handleRetard(UtilisateurADuRetardException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(418).body(
+                new APIError("418", ex.getMessage(), Instant.now()
+                ));
+    }
+
+    @ExceptionHandler(LivreDejaEmprunteException.class)
+    public ResponseEntity<APIError> handleRetard(LivreDejaEmprunteException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(401).body(
+                new APIError("401", ex.getMessage(), Instant.now()
+                ));
+    }
+
+    @ExceptionHandler(UtilisateurATropDEmpruntsException.class)
+    public ResponseEntity<APIError> handleTropDEmprunt(
+            UtilisateurATropDEmpruntsException ex
+    ) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(409).body(
+                new APIError("409", ex.getMessage(), Instant.now()
+                ));
+    }
+
+    @ExceptionHandler(PasPremierSurListeDAttenteException.class)
+    public ResponseEntity<APIError> handleTropDEmprunt(
+            PasPremierSurListeDAttenteException ex
+    ) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(401).body(
+                new APIError("401", ex.getMessage(), Instant.now()
+                ));
+    }
+
 }

@@ -42,6 +42,9 @@ insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, r
 VALUES (false, 'admin@mtartine', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Tartine', 'Marie',
         'BIBLIOTHECAIRE');
 insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'super@admin', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Super', 'Admin',
+        'ADMINISTRATEUR');
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
 VALUES (true, 'old@elaff', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Old', 'Compte',
         'UTILISATEUR');
 
@@ -241,8 +244,28 @@ values (CURRENT_DATE, (CURRENT_DATE + INTERVAL '14 days'), false, 1, CURRENT_DAT
 
 insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
                           id_livre, id_statut, id_utilisateur)
-values (CURRENT_DATE, (CURRENT_DATE + INTERVAL '14 days'), false, 1, CURRENT_DATE, 8, 2, 1);
+values (CURRENT_DATE, (CURRENT_DATE + INTERVAL '14 days'), false, 1, CURRENT_DATE, 8, 2, 2);
+
+insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
+                          id_livre, id_statut, id_utilisateur)
+values (CURRENT_DATE, (CURRENT_DATE + INTERVAL '14 days'), false, 2, CURRENT_DATE, 8, 2, 1);
 
 insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
                           id_livre, id_statut, id_utilisateur)
 values (CURRENT_DATE, (CURRENT_DATE + INTERVAL '14 days'), true, 1, CURRENT_DATE, 10, 2, 1);
+
+-- Un emprunt en cours
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+                    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  1, 1);
+-- des emprunts max
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  1, 2);
+
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  2, 2);
+
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  3, 2);
+
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE - INTERVAL '10 Days'),  4, 3);

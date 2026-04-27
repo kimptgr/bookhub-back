@@ -14,4 +14,5 @@ public interface LivreRepository extends JpaRepository<Livre, Long>, JpaSpecific
     Optional<Livre> findById(Long id);
     Optional<Livre> findByIsbn(@NotNull String isbn);
     Optional<Livre> findByIdAndEtatLibelleNot(Long id, Etat.Code labelEtat);
+    Optional<Livre> findByIdAndEtatLibelle(Long id, Etat.Code code);
 }
