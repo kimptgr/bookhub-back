@@ -130,4 +130,10 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(IdDiscordantsException.class)
+    public ResponseEntity<APIError> handleIdDiscordants(IdDiscordantsException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(409).body(new APIError("409", ex.getMessage(), Instant.now()));
+    }
+
 }
