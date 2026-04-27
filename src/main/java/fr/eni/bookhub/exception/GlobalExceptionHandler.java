@@ -28,8 +28,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400).body(new APIError("400", errors.toString(), Instant.now()));
     }
 
-    @ExceptionHandler(LivreDejaExistantException.class)
-    public ResponseEntity<APIError> gereLivreDejaExistant(LivreDejaExistantException ex) {
+    @ExceptionHandler(ElementDejaExistantException.class)
+    public ResponseEntity<APIError> gereLivreDejaExistant(ElementDejaExistantException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(409).body(
                 new APIError("409", ex.getMessage(), Instant.now()
@@ -76,6 +76,16 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage());
         return ResponseEntity.status(409).body(
                 new APIError("409", ex.getMessage(), Instant.now()
+                ));
+    }
+
+    @ExceptionHandler(GenreDejaExistantException.class)
+    public ResponseEntity<APIError> handleGenreDejaPresent(
+            GenreDejaExistantException ex
+    ) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(200).body(
+                new APIError("200", ex.getMessage(), Instant.now()
                 ));
     }
 }

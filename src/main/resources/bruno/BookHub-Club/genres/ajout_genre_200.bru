@@ -1,16 +1,15 @@
 meta {
-  name: allEtat_200
+  name: ajout_genre_200
   type: http
-  seq: 6
+  seq: 2
 }
 
-get {
-  url: {{BASE_URL}}/etats
+post {
+  url: {{BASE_URL}}/genres
   body: none
   auth: inherit
 }
 
 settings {
   encodeUrl: true
-  timeout: 0
 }

@@ -8,7 +8,7 @@ import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
-import fr.eni.bookhub.exception.LivreDejaExistantException;
+import fr.eni.bookhub.exception.ElementDejaExistantException;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
 import fr.eni.bookhub.specification.LivreSpecification;
@@ -51,7 +51,7 @@ public class LivreService {
     public void ajoutLivre(@NotNull LivreDTO livreDTO) {
 
         if (livreRepository.findByIsbn(isbnFormatter(livreDTO.isbn())).isPresent()) {
-            throw new LivreDejaExistantException(livreDTO.isbn());
+            throw new ElementDejaExistantException(livreDTO.isbn());
         }
 
         Livre livre = livreMapper.toEntity(livreDTO);

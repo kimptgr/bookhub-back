@@ -1,13 +1,14 @@
 package fr.eni.bookhub.controller;
 
+import fr.eni.bookhub.controller.dto.GenreAjoutDTO;
 import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.service.GenreService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,11 +18,14 @@ import java.util.List;
 public class GenreController {
     private final GenreService genreService;
 
-    //TODO delete when security is implemented
-    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public ResponseEntity<List<Genre>> getAllGenres() {
         return ResponseEntity.ok(genreService.trouverTousLesGenres());
     }
 
+    @PostMapping
+    public ResponseEntity<Void> ajoutGenre(@Valid  @RequestBody GenreAjoutDTO genre) {
+        genreService.ajouterGenre(genre);
+        return ResponseEntity.status(201).build();
+    }
 }
