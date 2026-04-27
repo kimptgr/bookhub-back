@@ -27,8 +27,8 @@ public class LivreSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             // Si on a un critère sur l'état
-            if (rechercheDTO.libelleEtat() != null && !rechercheDTO.libelleEtat().isBlank()) {
-                predicates.add(criteriaBuilder.equal(root.get("etat").get("libelle"), rechercheDTO.libelleEtat()));
+            if (rechercheDTO.libelleEtat() != null && !rechercheDTO.libelleEtat().toString().isBlank()) {
+                predicates.add(criteriaBuilder.equal(root.get("etat").get("libelle"), rechercheDTO.libelleEtat().toString()));
             }
 
             // Si on a un critère sur les genres

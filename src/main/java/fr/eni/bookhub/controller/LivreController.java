@@ -2,6 +2,7 @@ package fr.eni.bookhub.controller;
 
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
+import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.service.LivreService;
 import jakarta.validation.Valid;
@@ -45,7 +46,7 @@ public class LivreController {
     public ResponseEntity<Page<Livre>> rechercherLivres(
             @RequestParam(defaultValue = "", required = false) String saisie,
             @RequestParam(value = "genres", defaultValue = "", required = false) String libellesGenres,
-            @RequestParam(value = "disponibilite", defaultValue = "", required = false) String libelleEtat,
+            @RequestParam(value = "disponibilite", defaultValue = "", required = false) Etat.Code libelleEtat,
             @RequestParam(value = "page") @PositiveOrZero(message = "Le numéro de page doit être un entier non négatif") Integer numeroPage,
             @RequestParam(value = "size") @Positive(message = "Le nombre d'éléments par page doit être strictement positif") Integer taillePage
     ) {
