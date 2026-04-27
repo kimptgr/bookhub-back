@@ -59,7 +59,7 @@ class LivreSpecificationTests {
         String libelleMusique = "Test_Musique";
         String[] genres = {libelleThriller, libelleMusique};
         Etat.Code libelleDisponibilite = Etat.Code.DISPONIBLE;
-        var rechercheDTO = new RechercheDTO(saisieRecherche, genres, libelleDisponibilite.toString());
+        var rechercheDTO = new RechercheDTO(saisieRecherche, genres, libelleDisponibilite);
 
         var thilliez = creerAuteur("Thilliez");
         var thriller = creerGenre(libelleThriller);
