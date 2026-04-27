@@ -2,6 +2,7 @@ package fr.eni.bookhub.service;
 
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
+import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
 import fr.eni.bookhub.entity.Auteur;
 import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Genre;
@@ -13,6 +14,7 @@ import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
 import fr.eni.bookhub.specification.LivreSpecification;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,9 +52,7 @@ public class LivreService {
     @Transactional
     public void ajoutLivre(@NotNull LivreDTO livreDTO) {
 
-        if (livreRepository.findByIsbn(isbnFormatter(livreDTO.isbn())).isPresent()) {
-            throw new ElementDejaExistantException(livreDTO.isbn());
-        }
+        verifierIsbnUnique(livreDTO.isbn(), null);
 
         Livre livre = livreMapper.toEntity(livreDTO);
         List<Auteur> auteurs = auteurService.retrouverAuteurs(livreDTO.auteurs());
@@ -66,6 +66,58 @@ public class LivreService {
 
         livreRepository.save(livre);
     }
+
+    @Transactional
+    public void modifierLivre(UpdateLivreDTO livreDTO, Long id) {
+
+        Livre livre = livreRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Le livre avec l'id " + id + " n'a pas été trouvé ou n'existe pas"));
+
+        if (livreDTO.isbn() != null) {
+            verifierIsbnUnique(livreDTO.isbn(), id);
+        }
+
+        livreMapper.updateEntity(livreDTO, livre);
+
+        if (livreDTO.auteurs() != null) {
+            List<Auteur> auteurs = auteurService.retrouverAuteurs(livreDTO.auteurs());
+            livre.setAuteurs(auteurs);
+        }
+
+        if (livreDTO.genres() != null) {
+            List<Genre> genres = genreService.retrouverGenres(livreDTO.genres());
+            if (genres.size() != livreDTO.genres().size())
+                throw new GenresNonCorrespondantException();
+            livre.setGenres(genres);
+        }
+
+        if (livreDTO.idEtat() != null) {
+            livre.setEtat(etatService.retrouveEtat(livreDTO.idEtat()));
+        }
+
+        livreRepository.save(livre);
+
+    }
+
+    /*
+    je vérifie si l'ISBN est unique
+    dans le cas d'un livre ajouté, si on remonte un id de livre existant, on déclenche l'exception
+    dans le cas d'un livre à modifier, si on remonte un id différent de celui que l'on modifie, on déclenche l'exception
+    cela permet de vérifier, par exemple s'il y a eu une erreur de saisie d'ISBN et qu'il est modifié
+     */
+    private void verifierIsbnUnique(String isbn, Long idExclu) {
+        livreRepository.findByIsbn(isbnFormatter(isbn))
+                .filter(l -> idExclu == null || !l.getId().equals(idExclu))
+                .ifPresent(l -> {
+                    throw new ElementDejaExistantException(isbn);
+                });
+    }
+
+    public void deleteLivre(Long id) {
+        livreRepository.deleteById(id);
+    }
+
+
 
     public Page<Livre> rechercheLivres(RechercheDTO rechercheDTO, int numeroPage, int taillePage) {
 

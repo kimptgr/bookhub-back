@@ -43,63 +43,44 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // pas de session côté serveur
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll() // tout est permis pour l'instant
-                        .anyRequest().authenticated()               // tout le reste = faut être connecté
-                )
+                // Visiteur
+                .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
+
+                // Utilisateur connecté
+                .requestMatchers(HttpMethod.GET, "/books/{id}").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/books/search").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/profil/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PUT, "/profil/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PATCH, "/profil/me/mot-de-passe").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.POST, "/reservations").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/reservations/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/emprunts/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/emprunts/me/historique").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.POST, "/books/{id}/avis").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/dashboard/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+
+                // Bibliothécaire
+                .requestMatchers(HttpMethod.POST, "/books").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PATCH, "/books/{id}").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.DELETE, "/books/{id}").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/dashboard/bibliothecaire").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
+
+                // Administrateur uniquement
+                .requestMatchers(HttpMethod.GET, "/profils").hasRole("ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/profils/{id}").hasRole("ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.POST, "/profils").hasRole("ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PUT, "/profils/{id}").hasRole("ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.DELETE, "/profils/{id}").hasRole("ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/dashboard/admin").hasRole("ADMINISTRATEUR")
+
+                .anyRequest().authenticated()
+)
                 .authenticationProvider(authenticationProvider())             // (3) on branche notre provider
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // (4) on insère le filtre JWT
 
         return http.build();
     }
-
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .cors(Customizer.withDefaults())
-//                .csrf(csrf -> csrf.disable()) // désactivé car on utilise JWT, pas les sessions
-//                .sessionManagement(session ->
-//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // pas de session côté serveur
-//                .authorizeHttpRequests(auth -> auth
-//                // Visiteur
-//                .requestMatchers(HttpMethod.POST, "/auth/inscription").permitAll()
-//                .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
-//
-//                // Utilisateur connecté
-//                .requestMatchers(HttpMethod.GET, "/books").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/books/{id}").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/books/search").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/profil/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.PUT, "/profil/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.PATCH, "/profil/me/mot-de-passe").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.POST, "/reservations").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/reservations/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/emprunts/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/emprunts/me/historique").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.POST, "/books/{id}/avis").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/dashboard/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//
-//                // Bibliothécaire
-//                .requestMatchers(HttpMethod.POST, "/books").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.PUT, "/books/{id}").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.DELETE, "/books/{id}").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/dashboard/bibliothecaire").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
-//
-//                // Administrateur uniquement
-//                .requestMatchers(HttpMethod.GET, "/profils").hasRole("ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/profils/{id}").hasRole("ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.POST, "/profils").hasRole("ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.PUT, "/profils/{id}").hasRole("ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.DELETE, "/profils/{id}").hasRole("ADMINISTRATEUR")
-//                .requestMatchers(HttpMethod.GET, "/dashboard/admin").hasRole("ADMINISTRATEUR")
-//
-//                .anyRequest().authenticated()
-//)
-//                .authenticationProvider(authenticationProvider())             // (3) on branche notre provider
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // (4) on insère le filtre JWT
-//
-//        return http.build();
-//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

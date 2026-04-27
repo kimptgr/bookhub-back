@@ -1,6 +1,7 @@
 package fr.eni.bookhub.mapper;
 
 import fr.eni.bookhub.controller.dto.LivreDTO;
+import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
 import fr.eni.bookhub.entity.Livre;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,24 @@ public class LivreMapper {
             livre.setUrlImage(dto.urlImage());
 
         return livre;
+    }
+
+    public void updateEntity(UpdateLivreDTO dto, Livre livre) {
+        if (dto.isbn() != null) {
+            livre.setIsbn(isbnFormatter(dto.isbn()));
+        }
+        if (dto.titre() != null) {
+            livre.setTitre(dto.titre());
+        }
+        if (dto.dateDeParution() != null) {
+            livre.setDateDeParution(dto.dateDeParution());
+        }
+        if (dto.synopsis() != null) {
+            livre.setSynopsis(dto.synopsis());
+        }
+        if (dto.urlImage() != null) {
+            livre.setUrlImage(dto.urlImage());
+        }
     }
 
 }

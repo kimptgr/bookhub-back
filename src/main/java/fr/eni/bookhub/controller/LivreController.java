@@ -2,6 +2,7 @@ package fr.eni.bookhub.controller;
 
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
+import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
 import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.service.LivreService;
@@ -21,13 +22,25 @@ public class LivreController {
 
     private final LivreService livreService;
 
-    //TODO delete qud security
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<Void> ajoutLivre(@Valid @RequestBody LivreDTO livreDTO) {
         livreService.ajoutLivre(livreDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> modifierLivre(@Valid @RequestBody UpdateLivreDTO livreDTO, @PathVariable Long id) {
+        livreService.modifierLivre(livreDTO, id);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimerLivre(@PathVariable Long id){
+
+        livreService.deleteLivre(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/{id}")

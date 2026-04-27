@@ -4,6 +4,7 @@ import fr.eni.bookhub.controller.dto.ConnexionDTO;
 import fr.eni.bookhub.controller.dto.InscriptionDTO;
 import fr.eni.bookhub.exception.EmailDejaUtiliseException;
 import fr.eni.bookhub.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/inscription")
-    public ResponseEntity<?> inscription(@RequestBody InscriptionDTO request) {
+    public ResponseEntity<?> inscription(@Valid @RequestBody InscriptionDTO request) {
         try {
             authService.inscrire(request);
             return ResponseEntity.status(HttpStatus.CREATED)
