@@ -72,7 +72,7 @@ public class LivreService {
 
         // Cas où on a saisi un ISBN, on ignore les filtres et les éléments de pagination
         if (isbnMatcher.matches()) {
-            specification = livreSpecification.getSpecificationsForIsbn(rechercheDTO.saisie());
+            specification = livreSpecification.getSpecificationsForIsbn(isbnFormatter(rechercheDTO.saisie()));
             pageRequest = PageRequest.of(0, 20);
 
         } else {

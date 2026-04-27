@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import static fr.eni.bookhub.utils.TextFormatter.isbnFormatter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +49,8 @@ public class LivreServiceTests {
 
         livreService.rechercheLivres(rechercheDTO, 42, 9000);
 
-        verify(livreSpecification, times(1)).getSpecificationsForIsbn(saisie);
+        // On retire les espaces et les tirets de l'ISBN avant de faire la recherche
+        verify(livreSpecification, times(1)).getSpecificationsForIsbn(isbnFormatter(saisie));
 
         // La pagination est ignorée pour la recherche par ISBN
         verify(livreRepository).findAll((Specification<Livre>) any(), pageRequest.capture());
@@ -63,7 +65,8 @@ public class LivreServiceTests {
 
         livreService.rechercheLivres(rechercheDTO, 42, 9000);
 
-        verify(livreSpecification, times(1)).getSpecificationsForIsbn(saisie);
+        // On retire les espaces et les tirets de l'ISBN avant de faire la recherche
+        verify(livreSpecification, times(1)).getSpecificationsForIsbn(isbnFormatter(saisie));
 
         // La pagination est ignorée pour la recherche par ISBN
         verify(livreRepository).findAll((Specification<Livre>) any(), pageRequest.capture());

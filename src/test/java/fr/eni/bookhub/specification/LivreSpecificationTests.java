@@ -28,7 +28,7 @@ class LivreSpecificationTests {
 
     @Test
     void getSpecificationsForIsbn_DoitRetournerLeLivreAvecLeBonIsbn() {
-        String isbnRecherche = "978-2-35294-637-3";
+        String isbnRecherche = "9782352946373";
 
         var livreAttendu = Livre.builder()
                 .isbn(isbnRecherche).titre("Puzzle").auteurs(List.of(creerAuteur("Thilliez")))
@@ -66,7 +66,7 @@ class LivreSpecificationTests {
         var disponible = creerEtat(libelleDisponibilite);
 
         var livreAttenduNomAuteur = Livre.builder()
-                .isbn("978-2-35294-637-3").titre("Puzzle").auteurs(List.of(thilliez))
+                .isbn("9782352946373").titre("Puzzle").auteurs(List.of(thilliez))
                 .genres(List.of(thriller)).synopsis("lorem").etat(disponible).build();
 
         var livreDuMemeAuteurMaisPasDunGenreDemande = Livre.builder()
