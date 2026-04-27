@@ -3,10 +3,10 @@ package fr.eni.bookhub.controller;
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.entity.Livre;
-import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.service.LivreService;
-import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -34,18 +34,24 @@ public class LivreController {
         return ResponseEntity.ok(livreService.chercheLivreParId(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Livre>> rechercherLivres(@Nullable @RequestParam String saisie,
-                                                       @RequestParam String genres,
-                                                       @RequestParam String disponibilite,
-                                                       @RequestParam Integer page,
-                                                       @RequestParam Integer size) {
+    /**
+     * Recherche un livre, deux cas possibles :<br>
+     * - Recherche par ISBN (il doit être exact), dans ce cas les filtres de genre et d'état (disponibilité) sont ignorés<br>
+     * - Recherche par titre (partiel) OU par nom d'auteur⋅ice (partiel), dans ce cas les autres filtres sont appliqués<br>
+     *
+     * @return une liste de livres paginée qui correspond aux critères de recherche
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<Livre>> rechercherLivres(
+            @RequestParam(defaultValue = "", required = false) String saisie,
+            @RequestParam(value = "genres", defaultValue = "", required = false) String libellesGenres,
+            @RequestParam(value = "disponibilite", defaultValue = "", required = false) String libelleEtat,
+            @RequestParam(value = "page") @PositiveOrZero(message = "Le numéro de page doit être un entier non négatif") Integer numeroPage,
+            @RequestParam(value = "size") @Positive(message = "Le nombre d'éléments par page doit être strictement positif") Integer taillePage
+    ) {
+        RechercheDTO rechercheDTO = new RechercheDTO(saisie, libellesGenres.split(","), libelleEtat);
 
-        RechercheDTO rechercheDTO = new RechercheDTO(saisie, genres.split(","), disponibilite);
-
-        Page<Livre> livres = this.livreService.rechercheLivres(rechercheDTO, page, size);
-
-        return ResponseEntity.ok(livres);
+        return ResponseEntity.ok(this.livreService.rechercheLivres(rechercheDTO, numeroPage, taillePage));
     }
 
 }
