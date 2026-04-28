@@ -1,16 +1,15 @@
 package fr.eni.bookhub.controller;
 
 import fr.eni.bookhub.controller.dto.EmpruntDTO;
+import fr.eni.bookhub.controller.dto.EmpruntMisAJourDTO;
+import fr.eni.bookhub.controller.dto.UpdateEmpruntDTO;
+import fr.eni.bookhub.exception.IdDiscordantsException;
 import fr.eni.bookhub.service.EmpruntService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/emprunts")
@@ -22,5 +21,16 @@ public class EmpruntController {
     public ResponseEntity<Void> emprunterLivre(@Valid @RequestBody EmpruntDTO empruntDTO) {
         empruntService.ajoutEmprunt(empruntDTO);
         return ResponseEntity.status(201).build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<EmpruntMisAJourDTO> updateEmprunt(
+            @Positive @PathVariable Long id,
+            @Valid @RequestBody UpdateEmpruntDTO updateEmpruntDTO) {
+        if (!id.equals(updateEmpruntDTO.idResa())) {
+            throw new IdDiscordantsException("Les deux id d'emprunt fournis ne correspondent pas");
+        }
+
+        return ResponseEntity.ok(empruntService.updateEmprunt(updateEmpruntDTO));
     }
 }
