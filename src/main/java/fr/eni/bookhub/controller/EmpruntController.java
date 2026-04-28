@@ -27,7 +27,7 @@ public class EmpruntController {
     public ResponseEntity<EmpruntMisAJourDTO> updateEmprunt(
             @Positive @PathVariable Long id,
             @Valid @RequestBody UpdateEmpruntDTO updateEmpruntDTO) {
-        if (!id.equals(updateEmpruntDTO.idResa())) {
+        if (!id.equals(updateEmpruntDTO.idEmprunt())) {
             throw new IdDiscordantsException("Les deux id d'emprunt fournis ne correspondent pas");
         }
 

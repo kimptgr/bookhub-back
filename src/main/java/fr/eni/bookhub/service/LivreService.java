@@ -7,14 +7,14 @@ import fr.eni.bookhub.entity.Auteur;
 import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.exception.ElementDejaExistantException;
 import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
-import fr.eni.bookhub.exception.ElementDejaExistantException;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
+import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.specification.LivreSpecification;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -126,7 +126,7 @@ public class LivreService {
 
 
 
-    public Page<Livre> rechercheLivres(RechercheDTO rechercheDTO, int numeroPage, int taillePage) {
+    public Page<LivreView> rechercheLivres(RechercheDTO rechercheDTO, int numeroPage, int taillePage) {
 
         Specification<Livre> specification;
         PageRequest pageRequest;
@@ -143,7 +143,8 @@ public class LivreService {
             pageRequest = PageRequest.of(numeroPage, taillePage, Sort.by("titre").ascending());
         }
 
-        return livreRepository.findAll(specification, pageRequest);
+        Page<Livre> livresPage = livreRepository.findAll(specification, pageRequest);
+        return livresPage.map(livreMapper::toLivreView);
     }
 
     public Livre chercheLivreParId(Long id) {

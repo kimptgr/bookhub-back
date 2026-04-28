@@ -3,10 +3,7 @@ package fr.eni.bookhub.service;
 import fr.eni.bookhub.controller.dto.EmpruntDTO;
 import fr.eni.bookhub.controller.dto.EmpruntMisAJourDTO;
 import fr.eni.bookhub.controller.dto.UpdateEmpruntDTO;
-import fr.eni.bookhub.entity.Emprunt;
-import fr.eni.bookhub.entity.Etat;
-import fr.eni.bookhub.entity.Livre;
-import fr.eni.bookhub.entity.Utilisateur;
+import fr.eni.bookhub.entity.*;
 import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.IdDiscordantsException;
 import fr.eni.bookhub.exception.emprunt.LivreDejaEmprunteException;
@@ -15,12 +12,15 @@ import fr.eni.bookhub.exception.emprunt.UtilisateurATropDEmpruntsException;
 import fr.eni.bookhub.mapper.EmpruntMapper;
 import fr.eni.bookhub.repository.EmpruntRepository;
 import fr.eni.bookhub.repository.EtatRepository;
+import fr.eni.bookhub.repository.LivreRepository;
+import fr.eni.bookhub.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +33,8 @@ public class EmpruntService {
 
     private final EmpruntRepository empruntRepository;
     private final EtatRepository etatRepository;
+    private final LivreRepository livreRepository;
+    private final ReservationRepository reservationRepository;
 
     private final int EMPRUNT_MAX = 3;
 
@@ -87,7 +89,7 @@ public class EmpruntService {
      */
     @Transactional
     public EmpruntMisAJourDTO updateEmprunt(UpdateEmpruntDTO updateEmpruntDTO) {
-        Emprunt emprunt = empruntRepository.findById(updateEmpruntDTO.idResa())
+        Emprunt emprunt = empruntRepository.findById(updateEmpruntDTO.idEmprunt())
                 .orElseThrow(() -> new ElementNotFoundException("L'emprunt demandé n'a pas été trouvé"));
 
         if (!emprunt.getUtilisateur().getId().equals(updateEmpruntDTO.idEmprunteur())) {
@@ -101,8 +103,21 @@ public class EmpruntService {
         if (emprunt.getDateRetourEffectif() == null
                 && updateEmpruntDTO.dateRetour().isBefore(LocalDate.now().plusDays(1).atStartOfDay())) {
             // Si la date de retour portée par le DTO est avant demain, on considère qu'on veut rendre l'emprunt
-            Etat etat = etatRepository.findByLibelle(Etat.Code.DISPONIBLE)
-                    .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des états"));
+
+            Livre livre = livreRepository.getReferenceById(updateEmpruntDTO.idLivre());
+            List<Reservation> reservations = reservationRepository.findAllByLivreAndEstSupprimeeIsFalse(livre);
+
+            Etat etat;
+            // Si la réservation est vide, on rend le livre disponible
+            if (reservations.isEmpty()) {
+                etat = etatRepository.findByLibelle(Etat.Code.DISPONIBLE)
+                        .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des états"));
+
+            // S'il y a des réservations en liste d'attente, on passe le livre en réservé
+            } else {
+                etat = etatRepository.findByLibelle(Etat.Code.RESERVE)
+                        .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des états"));
+            }
 
             emprunt.setDateRetourEffectif(LocalDate.now());
             emprunt.getLivre().setEtat(etat);

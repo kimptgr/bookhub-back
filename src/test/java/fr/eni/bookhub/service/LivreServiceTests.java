@@ -6,12 +6,14 @@ import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
 import fr.eni.bookhub.specification.LivreSpecification;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,14 +22,13 @@ import static fr.eni.bookhub.utils.TextFormatter.isbnFormatter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LivreServiceTests {
 
-//    @Mock
-//    private LivreMapper livreMapper;
+    @Mock
+    private LivreMapper livreMapper;
 //    @Mock
 //    private AuteurService auteurService;
 //    @Mock
@@ -41,6 +42,11 @@ public class LivreServiceTests {
 
     @InjectMocks
     private LivreService livreService;
+
+    @BeforeEach
+    void setUp() {
+        when(livreRepository.findAll((Specification<Livre>) any(), (PageRequest) any())).thenReturn(Page.empty());
+    }
 
     @Test
     void rechercheLivres_QuandLaSaisieEstUnIsbn13_DoitAppelerGetSpecificationsForIsbn() {
