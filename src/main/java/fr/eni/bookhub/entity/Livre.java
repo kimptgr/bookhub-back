@@ -56,6 +56,9 @@ public class Livre {
     @OneToMany(mappedBy = "livre")
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "livre")
+    private List<Emprunt> emprunts;
+
     @OneToMany
     @JoinColumn(name = "id_livre", nullable = false)
     private List<Avis> avis;

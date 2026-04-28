@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public record UpdateEmpruntDTO(
-        @Positive Long idResa,
+        @Positive Long idEmprunt,
         @Positive Long idLivre,
         @Positive Long idEmprunteur,
         @NotNull LocalDateTime dateRetour

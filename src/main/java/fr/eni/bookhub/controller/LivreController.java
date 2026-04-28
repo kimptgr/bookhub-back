@@ -5,6 +5,7 @@ import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
 import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.service.LivreService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -56,7 +57,7 @@ public class LivreController {
      * @return une liste de livres paginée qui correspond aux critères de recherche
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<Livre>> rechercherLivres(
+    public ResponseEntity<Page<LivreView>> rechercherLivres(
             @RequestParam(defaultValue = "", required = false) String saisie,
             @RequestParam(value = "genres", defaultValue = "", required = false) String libellesGenres,
             @RequestParam(value = "disponibilite", defaultValue = "", required = false) Etat.Code libelleEtat,
