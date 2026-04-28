@@ -1,0 +1,28 @@
+meta {
+  name: connexion bibliothécaire
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{BASE_URL}}/auth/connexion
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@mtartine.com",
+    "password": "Aaaaaaaaaa1+"
+  }
+}
+
+script:post-response {
+  let data = res.getBody();
+  bru.setEnvVar("ACCESS_TOKEN", data.token, { persist: true });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
