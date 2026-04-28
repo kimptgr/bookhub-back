@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/emprunts").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.PATCH, "/emprunts/{id}").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.GET, "/dashboard/bibliothecaire").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.GET, "/utilisateurs").hasAnyRole("BIBLIOTHECAIRE", "ADMINISTRATEUR")
 
                 // Administrateur uniquement
                 .requestMatchers(HttpMethod.GET, "/profils").hasRole("ADMINISTRATEUR")
