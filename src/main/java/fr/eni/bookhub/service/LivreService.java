@@ -114,6 +114,13 @@ public class LivreService {
     }
 
     public void deleteLivre(Long id) {
+        Livre livre = livreRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Le livre avec l'id " + id + " n'existe pas"));
+
+        if (!livre.getReservations().isEmpty()) {
+            throw new ElementDejaExistantException("Impossible de supprimer ce livre, il possède des réservations actives.");
+        }
+
         livreRepository.deleteById(id);
     }
 
