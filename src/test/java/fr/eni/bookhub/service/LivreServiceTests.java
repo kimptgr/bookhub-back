@@ -55,7 +55,7 @@ public class LivreServiceTests {
 
         // La pagination est ignorée pour la recherche par ISBN
         verify(livreRepository).findAll((Specification<Livre>) any(), pageRequest.capture());
-        assertEquals(PageRequest.of(0, 20), pageRequest.getValue());
+        assertEquals(PageRequest.of(0, 12), pageRequest.getValue());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class LivreServiceTests {
 
         // La pagination est ignorée pour la recherche par ISBN
         verify(livreRepository).findAll((Specification<Livre>) any(), pageRequest.capture());
-        assertEquals(PageRequest.of(0, 20), pageRequest.getValue());
+        assertEquals(PageRequest.of(0, 12), pageRequest.getValue());
     }
 
     @Test
