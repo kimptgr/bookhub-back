@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/profils").hasRole("ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.PUT, "/profils/{id}").hasRole("ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.DELETE, "/profils/{id}").hasRole("ADMINISTRATEUR")
-                .requestMatchers(HttpMethod.GET, "/dashboard/admin").hasRole("ADMINISTRATEUR")
+                .requestMatchers("/dashboard/admin/**").hasRole("ADMINISTRATEUR")
 
                 .anyRequest().denyAll() // On rejette toutes les requêtes qui n'ont pas été explicitement autorisées
 )

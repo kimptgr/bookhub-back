@@ -47,6 +47,9 @@ VALUES (false, 'super@admin.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7
 insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
 VALUES (true, 'old@elaff.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Old', 'Compte',
         'UTILISATEUR');
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'jean.bono@boucherie.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Bono', 'Jean',
+        'ADMINISTRATEUR');
 -- Mot de passe commun: Aaaaaaaaaa1+
 
 
