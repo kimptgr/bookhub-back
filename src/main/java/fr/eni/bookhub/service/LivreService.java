@@ -3,15 +3,13 @@ package fr.eni.bookhub.service;
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
-import fr.eni.bookhub.entity.Auteur;
-import fr.eni.bookhub.entity.Etat;
-import fr.eni.bookhub.entity.Genre;
-import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.entity.*;
 import fr.eni.bookhub.exception.ElementDejaExistantException;
 import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
+import fr.eni.bookhub.repository.StatutRepository;
 import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.specification.LivreSpecification;
 import jakarta.transaction.Transactional;
@@ -37,14 +35,13 @@ public class LivreService {
     private final LivreMapper livreMapper;
 
     private final AuteurService auteurService;
-
-    private final GenreService genreService;
-
     private final EtatService etatService;
+    private final GenreService genreService;
 
     private final LivreSpecification livreSpecification;
 
     private final LivreRepository livreRepository;
+    private final StatutRepository statutRepository;
 
     // Vérifie que la string ressemble à un ISBN, cette regex peut matcher avec des ISBN non valides
     private static final Pattern isbnPattern = Pattern.compile("[0-9\\- ]{10,17}X?");
@@ -113,12 +110,18 @@ public class LivreService {
                 });
     }
 
+    @Transactional
     public void deleteLivre(Long id) {
         Livre livre = livreRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Le livre avec l'id " + id + " n'existe pas"));
 
+        // Si le livre à des réservations en attente, on les annule toutes
         if (!livre.getReservations().isEmpty()) {
-            throw new ElementDejaExistantException("Impossible de supprimer ce livre, il possède des réservations actives.");
+            Statut statutAnnulee = statutRepository.findByLibelle(Statut.Code.ANNULEE)
+                    .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des statuts"));
+
+            livre.getReservations().forEach(reservation -> reservation.setStatut(statutAnnulee));
+            livreRepository.save(livre);
         }
 
         livreRepository.deleteById(id);
