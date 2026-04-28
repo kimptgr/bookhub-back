@@ -17,6 +17,9 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
 
     Optional<Utilisateur> findByIdAndDesactiveIsFalse(Long id);
 
+    //permet de lister et trier les utilisateurs par nom
+    List<Utilisateur> findAllByOrderByNomAsc();
+
     @Query(
         """
            SELECT u.id, u.email FROM Utilisateur u WHERE u.desactive = false
