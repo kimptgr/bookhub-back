@@ -86,7 +86,7 @@ INSERT INTO auteurs (nom, prenom)
 VALUES ('BUSSI', 'Michel');
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2019-04-24', 1, '9782253238027', 'Changer l''eau des fleurs',
+VALUES ('2019-04-24', 3, '9782253238027', 'Changer l''eau des fleurs',
         'https://www.babelio.com/couv/CVT_Changer-leau-des-fleurs_5277.jpg',
         'Violette Toussaint est garde-cimetière dans une petite ville de Bourgogne. Les gens de passage et les habitués viennent se confier et se réchauffer dans sa loge. Avec la petite équipe de fossoyeurs et le jeune curé, elle forme une famille décalée. Mais quels événements ont mené Violette dans cet univers où le tragique et le cocasse s’entremêlent ?Après le succès des  Oubliés du dimanche, un nouvel hymne au merveilleux des choses simples.');
 INSERT INTO livres_genres (id_livre, id_genre)
@@ -95,7 +95,7 @@ INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (1, 1);
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2021-10-14', 1, '9782021465877', 'Le pouvoir rhétorique',
+VALUES ('2021-10-14', 3, '9782021465877', 'Le pouvoir rhétorique',
         'https://www.babelio.com/couv/CVT_Le-pouvoir-rhetorique_9738.jpg', 'La rhétorique est partout. Dans les discours politiques comme dans les spots publicitaires. Dans les réunions professionnelles comme dans les dîners de famille. Dans les entretiens d’embauche comme dans les rendez-vous galants. Pas un jour ne passe sans que nous ayons à défendre une idée, un projet, un produit ; et à nous protéger contre d’éventuelles fourberies. Que cela nous plaise ou non, convaincre est un pouvoir. À nous d’apprendre à le maîtriser.
 Et de savoir y résister.');
 INSERT INTO livres_genres (id_livre, id_genre)
@@ -104,7 +104,7 @@ INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (2, 2);
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2020-07-10', 1, '9782378801670', 'Brûler brûler brûler',
+VALUES ('2020-07-10', 3, '9782378801670', 'Brûler brûler brûler',
         'https://www.babelio.com/couv/CVT_Bruler-bruler-bruler_1999.jpg', '« Te faire douter.
 Te faire avoir peur.
 Te faire avoir honte
@@ -120,7 +120,7 @@ INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (3, 3);
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2007-09-28', 1, '9782253122111', 'King Kong Théorie',
+VALUES ('2007-09-28', 3, '9782253122111', 'King Kong Théorie',
         'https://m.media-amazon.com/images/I/91vTbX7F2kL._SY522_.jpg', 'J’écris de chez les moches, pour les moches, les frigides, les mal baisées, les imbaisables, toutes les exclues du grand marché à la bonne meuf, aussi bien que pour les hommes qui n’ont pas envie d’être protecteurs, ceux qui voudraient l’être mais ne savent pas s’y prendre, ceux qui ne sont pas ambitieux, ni compétitifs, ni bien membrés.
 Parce que l’idéal de la femme blanche séduisante qu’on nous brandit tout le temps sous le nez, je crois bien qu’il n’existe pas.
 V.D.
@@ -132,7 +132,7 @@ VALUES (4, 4);
 
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2010-01-20', 1, '9782290019436', 'Le Trône de Fer - Intégrale tome 1 sur 7',
+VALUES ('2010-01-20', 3, '9782290019436', 'Le Trône de Fer - Intégrale tome 1 sur 7',
         'https://www.babelio.com/couv/CVT_10390_aj_m_4829.jpg',
         'Après avoir tué le monarque dément Aerys II Targaryen, Robert Baratheon est devenu le nouveau souverain du royaume des Sept Couronnes. Tandis que, en son domaine de Winterfell, son fidèle ami le duc Eddard Stark rend paisiblement la justice. Mais un jour, le roi Robert lui rend visite, porteur de sombres nouvelles : le trône est en péril. Stark, qui s''est toujours tenu éloigné des affaires du pouvoir, doit alors abandonner les terres du Nord pour rejoindre la cour et ses intrigues. L''heure est grave, d''autant qu''au-delà du Mur qui protège le royaume depuis des siècles, rôdent d''étranges créatures.');
 INSERT INTO livres_genres (id_livre, id_genre)
@@ -151,7 +151,7 @@ INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (6, 5);
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2010-01-20', 1, '9782290022160',
+VALUES ('2010-01-20', 2, '9782290022160',
         'Le Trône de Fer - Intégrale tome 3 sur 7',
         'https://www.babelio.com/couv/sm_30276_1604083.jpg',
         'Après avoir tué le monarque dément Aerys II Targaryen, Robert Baratheon est devenu le nouveau souverain du royaume des Sept Couronnes. Tandis que, en son domaine de Winterfell, son fidèle ami le duc Eddard Stark rend paisiblement la justice. Mais un jour, le roi Robert lui rend visite, porteur de sombres nouvelles : le trône est en péril. Stark, qui s''est toujours tenu éloigné des affaires du pouvoir, doit alors abandonner les terres du Nord pour rejoindre la cour et ses intrigues. L''heure est grave, d''autant qu''au-delà du Mur qui protège le royaume depuis des siècles, rôdent d''étranges créatures.');
@@ -161,7 +161,7 @@ INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (7, 5);
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2010-01-20', 1, '9782290022177',
+VALUES ('2010-01-20', 4, '9782290022177',
         'Le Trône de Fer - Intégrale tome 4 sur 7',
         'https://www.babelio.com/couv/CVT_Le-Trone-de-Fer-Integrale-tome-4_8756.jpg',
         'Après avoir tué le monarque dément Aerys II Targaryen, Robert Baratheon est devenu le nouveau souverain du royaume des Sept Couronnes. Tandis que, en son domaine de Winterfell, son fidèle ami le duc Eddard Stark rend paisiblement la justice. Mais un jour, le roi Robert lui rend visite, porteur de sombres nouvelles : le trône est en péril. Stark, qui s''est toujours tenu éloigné des affaires du pouvoir, doit alors abandonner les terres du Nord pour rejoindre la cour et ses intrigues. L''heure est grave, d''autant qu''au-delà du Mur qui protège le royaume depuis des siècles, rôdent d''étranges créatures.');
@@ -191,7 +191,7 @@ INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (10, 5);
 
 INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
-VALUES ('2010-01-20', 4, '2290022160',
+VALUES ('2010-01-20', 1, '2290022160',
         'Le Trône de Fer - Intégrale tome 7 sur 7',
         'https://www.babelio.com/couv/CVT_Le-Trone-de-Fer-Integrale-7--A-Dream-of-Spring_1366.jpg',
         'Après avoir tué le monarque dément Aerys II Targaryen, Robert Baratheon est devenu le nouveau souverain du royaume des Sept Couronnes. Tandis que, en son domaine de Winterfell, son fidèle ami le duc Eddard Stark rend paisiblement la justice. Mais un jour, le roi Robert lui rend visite, porteur de sombres nouvelles : le trône est en péril. Stark, qui s''est toujours tenu éloigné des affaires du pouvoir, doit alors abandonner les terres du Nord pour rejoindre la cour et ses intrigues. L''heure est grave, d''autant qu''au-delà du Mur qui protège le royaume depuis des siècles, rôdent d''étranges créatures.');
@@ -236,6 +236,7 @@ VALUES (12, 13);
 INSERT INTO livres_auteurs (id_livre, id_auteur)
 VALUES (12, 14);
 
+-- reservation annulée
 insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
                           id_livre, id_statut, id_utilisateur)
 values ((CURRENT_DATE - INTERVAL '10 days'), (CURRENT_DATE + interval '4 days'), true, null,
@@ -262,7 +263,7 @@ INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionn
                     ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  1, 1);
 -- des emprunts max
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
-    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  1, 2);
+    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  5, 2);
 
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
     ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  2, 2);
@@ -270,5 +271,6 @@ INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionn
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
     ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  3, 2);
 
+-- retard
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
     ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE - INTERVAL '10 Days'),  4, 3);

@@ -9,7 +9,9 @@ import fr.eni.bookhub.entity.Utilisateur;
 import fr.eni.bookhub.exception.UtilisateurADejaReserveCelivreException;
 import fr.eni.bookhub.exception.UtilisateurATropDeReservationsException;
 import fr.eni.bookhub.exception.emprunt.PasPremierSurListeDAttenteException;
+import fr.eni.bookhub.exception.reservation.UtilisateurQuiEmprunteNePeutPasReserverException;
 import fr.eni.bookhub.factory.ReservationFactory;
+import fr.eni.bookhub.repository.EmpruntRepository;
 import fr.eni.bookhub.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
+    private final EmpruntRepository empruntRepository;
+
     private final UtilisateurService utilisateurService;
 
     /**
@@ -47,14 +51,16 @@ public class ReservationService {
         verifieReservationsEnCours(reservateur);
 
         Livre livre = livreService.chercheLivreParIdEtUtilisable(reservationDTO.livreId());
+        verifieEmpruntEnCours(reservateur, livre);
         verifieSiReservationDejaExistante(livre, reservateur);
         int rang = calculRang(livre);
         Reservation reservation = reservationFactory.create(livre, reservateur, dateReservation, rang);
 
-        livreService.updateEtat(livre, Etat.Code.RESERVE);
+        if (livre.getEtat().getLibelle().equals(Etat.Code.DISPONIBLE)) livreService.updateEtat(livre, Etat.Code.RESERVE);
 
         reservationRepository.save(reservation);
     }
+
 
     /**
      * Vérifie si la personne qui fait la demande à les droits,
@@ -76,7 +82,7 @@ public class ReservationService {
     }
 
     /**
-     * Vérifie que l'utilisateur n'est pas déjà sur la liste d'attente du livre
+     * Vérifie que l'utilisateur n'est pas déjà sur la liste d'attente du livre ou qu'il n'a pas emprunté le livre
      *
      * @param livre
      * @param reservateur
@@ -156,12 +162,29 @@ public class ReservationService {
         List<Reservation> reservationList = reservationRepository.findAllByLivreAndEstSupprimeeIsFalse(livre);
 
         reservationList.forEach((reservation) -> {
-            reservation.setRang(reservation.getRang() - 1);
             if (reservation.getUtilisateur().getId().equals(
                     emprunteur.getId()) && reservation.getRang() != 1) throw new PasPremierSurListeDAttenteException();
+
             if (reservation.getUtilisateur().getId().equals(
                     emprunteur.getId())) reservation.setEstSupprimee(true);
+
+            reservation.setRang(reservation.getRang() - 1);
         });
         reservationRepository.saveAll(reservationList);
+    }
+
+    /**
+     * Vérifie que le réservateur n'est pas emprunteur du livre
+     *
+     * @param reservateur
+     * @param livre
+     */
+    private void verifieEmpruntEnCours(Utilisateur reservateur, Livre livre) {
+        boolean empruntEncours = empruntRepository.existsByLivreAndUtilisateurAndDateRetourEffectifIsNull(livre, reservateur);
+
+        if (empruntEncours)
+        {
+            throw new UtilisateurQuiEmprunteNePeutPasReserverException();
+        }
     }
 }

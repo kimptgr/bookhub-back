@@ -16,4 +16,6 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
     int countByUtilisateurAndDateRetourEffectifIsNullAndDateRetourPrevisionnelIsBefore(Utilisateur emprunteur, LocalDate now);
 
     boolean existsByLivreAndDateRetourEffectifIsNull(Livre livre);
+
+    boolean existsByLivreAndUtilisateurAndDateRetourEffectifIsNull(Livre livre, Utilisateur utilisateur);
 }

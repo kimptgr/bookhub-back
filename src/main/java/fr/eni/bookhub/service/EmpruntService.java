@@ -40,7 +40,7 @@ public class EmpruntService {
     public void ajoutEmprunt(@Valid EmpruntDTO empruntDTO) {
         Utilisateur emprunteur = utilisateurService.loadUserById(empruntDTO.emprunteurId());
 
-        Livre livre = livreService.chercheLivreParIdEtDisponible(empruntDTO.livreId());
+        Livre livre = livreService.chercheLivreParIdEtDisponibleOuReserve(empruntDTO.livreId());
         verifieLivrePasEmprunte(livre);
         verifieNombreEmprunt(emprunteur);
         verifiePasDeRetard(emprunteur);

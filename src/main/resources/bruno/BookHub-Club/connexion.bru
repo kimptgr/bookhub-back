@@ -19,7 +19,7 @@ body:json {
 
 script:post-response {
   let data = res.getBody();
-  bru.setEnvVar("ACCESS_TOKEN", data.token, { persist: true });
+  bru.setVar("ACCESS_TOKEN", data.token, { persist: true });
 }
 
 settings {

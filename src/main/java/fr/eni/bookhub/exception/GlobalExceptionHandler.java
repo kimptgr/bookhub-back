@@ -4,6 +4,7 @@ import fr.eni.bookhub.exception.emprunt.LivreDejaEmprunteException;
 import fr.eni.bookhub.exception.emprunt.PasPremierSurListeDAttenteException;
 import fr.eni.bookhub.exception.emprunt.UtilisateurADuRetardException;
 import fr.eni.bookhub.exception.emprunt.UtilisateurATropDEmpruntsException;
+import fr.eni.bookhub.exception.reservation.UtilisateurQuiEmprunteNePeutPasReserverException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Log4j2
@@ -123,6 +123,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PasPremierSurListeDAttenteException.class)
     public ResponseEntity<APIError> handleTropDEmprunt(
             PasPremierSurListeDAttenteException ex
+    ) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(401).body(
+                new APIError("401", ex.getMessage(), Instant.now()
+                ));
+    }
+
+    @ExceptionHandler(UtilisateurQuiEmprunteNePeutPasReserverException.class)
+    public ResponseEntity<APIError> handlePasResaSiEmprunt(
+            UtilisateurQuiEmprunteNePeutPasReserverException ex
     ) {
         log.error(ex.getMessage());
         return ResponseEntity.status(401).body(
