@@ -4,7 +4,6 @@ import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
 import fr.eni.bookhub.entity.Etat;
-import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.service.LivreService;
 import jakarta.validation.Valid;
@@ -60,11 +59,33 @@ public class LivreController {
     public ResponseEntity<Page<LivreView>> rechercherLivres(
             @RequestParam(defaultValue = "", required = false) String saisie,
             @RequestParam(value = "genres", defaultValue = "", required = false) String libellesGenres,
-            @RequestParam(value = "disponibilite", defaultValue = "", required = false) Etat.Code libelleEtat,
+            @RequestParam(value = "disponibilites", defaultValue = "", required = false) String libellesEtats,
             @RequestParam(value = "page") @PositiveOrZero(message = "Le numéro de page doit être un entier non négatif") Integer numeroPage,
             @RequestParam(value = "size") @Positive(message = "Le nombre d'éléments par page doit être strictement positif") Integer taillePage
     ) {
-        RechercheDTO rechercheDTO = new RechercheDTO(saisie, libellesGenres.split(","), libelleEtat);
+        String[] libellesEtatsArray = libellesEtats.split(",");
+        Etat.Code[] codesEtat;
+
+        System.out.println("Avant");
+        System.out.println(libellesEtatsArray[0]);
+        System.out.println("Après");
+
+        if (!libellesEtatsArray[0].isEmpty()) {
+            codesEtat = new Etat.Code[libellesEtatsArray.length];
+
+            try {
+                for (int i = 0; i < libellesEtatsArray.length; i++) {
+                    codesEtat[i] = Etat.Code.valueOf(libellesEtatsArray[i]);
+                }
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().build();
+            }
+
+        } else {
+            codesEtat = new Etat.Code[0];
+        }
+
+        RechercheDTO rechercheDTO = new RechercheDTO(saisie, libellesGenres.split(","), codesEtat);
 
         return ResponseEntity.ok(this.livreService.rechercheLivres(rechercheDTO, numeroPage, taillePage));
     }

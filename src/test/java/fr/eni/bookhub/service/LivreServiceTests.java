@@ -1,7 +1,6 @@
 package fr.eni.bookhub.service;
 
 import fr.eni.bookhub.controller.dto.RechercheDTO;
-import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
 import fr.eni.bookhub.mapper.LivreMapper;
 import fr.eni.bookhub.repository.LivreRepository;
@@ -51,7 +50,7 @@ public class LivreServiceTests {
     @Test
     void rechercheLivres_QuandLaSaisieEstUnIsbn13_DoitAppelerGetSpecificationsForIsbn() {
         String saisie = "978-2-35294-637-3";
-        var rechercheDTO = new RechercheDTO(saisie, new String[] { "sera", "ignore" }, Etat.Code.EMPRUNTE);
+        var rechercheDTO = new RechercheDTO(saisie, new String[] { "sera", "ignore" }, null);
         ArgumentCaptor<PageRequest> pageRequest = forClass(PageRequest.class);
 
         livreService.rechercheLivres(rechercheDTO, 42, 9000);
@@ -67,7 +66,7 @@ public class LivreServiceTests {
     @Test
     void rechercheLivres_QuandLaSaisieEstUnIsbn10_DoitAppelerGetSpecificationsForIsbn() {
         String saisie = "0-19-853453";
-        var rechercheDTO = new RechercheDTO(saisie, new String[] { "toujours", "ignore" }, Etat.Code.INUTILISABLE);
+        var rechercheDTO = new RechercheDTO(saisie, new String[] { "toujours", "ignore" }, null);
         ArgumentCaptor<PageRequest> pageRequest = forClass(PageRequest.class);
 
         livreService.rechercheLivres(rechercheDTO, 42, 9000);
@@ -82,7 +81,7 @@ public class LivreServiceTests {
 
     @Test
     void rechercheLivres_QuandLaSaisieNestPasUnIsbn_DoitAppelerGetSpecificationsForGenreOuEtatOuTitreOuNomAuteur() {
-        var rechercheDTO = new RechercheDTO("Thilliez", new String[] { "hors", "test" }, Etat.Code.DISPONIBLE);
+        var rechercheDTO = new RechercheDTO("Thilliez", new String[] { "hors", "test" }, null);
         int numeroPage = 3;
         int taillePage = 30;
         ArgumentCaptor<PageRequest> pageRequest = forClass(PageRequest.class);

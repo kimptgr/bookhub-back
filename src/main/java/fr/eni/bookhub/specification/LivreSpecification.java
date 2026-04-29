@@ -2,6 +2,7 @@ package fr.eni.bookhub.specification;
 
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.entity.Auteur;
+import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.entity.Livre;
 import jakarta.persistence.criteria.Join;
@@ -26,12 +27,17 @@ public class LivreSpecification {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            // Si on a un critère sur l'état
-            if (rechercheDTO.libelleEtat() != null && !rechercheDTO.libelleEtat().toString().isBlank()) {
-                predicates.add(criteriaBuilder.equal(root.get("etat").get("libelle"), rechercheDTO.libelleEtat().toString()));
+            // Si on a un critère sur l'état, on l'applique
+            if (rechercheDTO.libellesEtats() != null && rechercheDTO.libellesEtats().length > 0) {
+                Join<Livre, Etat> etatJoin = root.join("etat");
+                predicates.add(etatJoin.get("libelle").in((Object[]) rechercheDTO.libellesEtats()));
+
+            } else {
+                // Sinon, on ne remonte pas les livres inutilisables
+                predicates.add(criteriaBuilder.notEqual(root.get("etat").get("libelle"), Etat.Code.INUTILISABLE));
             }
 
-            // Si on a un critère sur les genres
+            // Si on a un critère sur les genres, on l'applique
             if (rechercheDTO.libellesGenres() != null && rechercheDTO.libellesGenres().length > 0 && !rechercheDTO.libellesGenres()[0].isBlank()) {
                 Join<Livre, Genre> genreJoin = root.join("genres");
                 predicates.add(genreJoin.get("libelle").in((Object[]) rechercheDTO.libellesGenres()));

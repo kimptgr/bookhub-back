@@ -59,7 +59,8 @@ class LivreSpecificationTests {
         String libelleMusique = "Test_Musique";
         String[] genres = {libelleThriller, libelleMusique};
         Etat.Code libelleDisponibilite = Etat.Code.DISPONIBLE;
-        var rechercheDTO = new RechercheDTO(saisieRecherche, genres, libelleDisponibilite);
+        Etat.Code[] libelleDisponibiliteArray = { libelleDisponibilite };
+        var rechercheDTO = new RechercheDTO(saisieRecherche, genres, libelleDisponibiliteArray);
 
         var thilliez = creerAuteur("Thilliez");
         var thriller = creerGenre(libelleThriller);
@@ -95,6 +96,9 @@ class LivreSpecificationTests {
                 .hasSize(2)
                 .contains(livreAttenduNomAuteur, livreAttenduTitre);
     }
+
+    // TODO: Ajouter test pour documenter le fonctionnel suivant :
+    //  on ne remonte pas les inutilisables si aucun filtre d'Etat n'est saisi
 
 
     private Auteur creerAuteur(String nomAuteur) {
