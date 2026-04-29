@@ -263,14 +263,25 @@ public class ReservationService {
         return reservationRepository
                 .findByUtilisateurAndEstSupprimee(utilisateur, false)
                 .stream()
-                .map(r -> new ReservationProfilDTO(
-                        r.getId(),
-                        r.getLivre().getTitre(),
-                        r.getLivre().getUrlImage(),
-                        r.getRang(),
-                        r.getStatut().getLibelle().toString(),
-                        r.getDateDisponibilite()
-                ))
+                .map(r -> {
+
+                    // Vérifie s'il existe un emprunt en cours pour ce livre
+                    boolean empruntEnCours = empruntRepository
+                            .existsByLivreIdAndDateRetourEffectifIsNull(r.getLivre().getId());
+
+                    // permet de savoir si c'est ton tour
+                    boolean disponible = (r.getRang() == 1) && !empruntEnCours;
+
+                    return new ReservationProfilDTO(
+                            r.getId(),
+                            r.getLivre().getTitre(),
+                            r.getLivre().getUrlImage(),
+                            r.getRang(),
+                            r.getStatut().getLibelle().toString(),
+                            r.getDateDisponibilite(),
+                            disponible
+                    );
+                })
                 .toList();
     }
 
