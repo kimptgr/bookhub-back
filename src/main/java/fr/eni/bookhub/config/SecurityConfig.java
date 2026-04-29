@@ -36,7 +36,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // désactivé car on utilise JWT, pas les sessions
@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/reservations/me/profil").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.PATCH, "/profil/me/mot-de-passe").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.POST, "/reservations").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.DELETE, "/reservations/*").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.GET, "/reservations/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.GET, "/emprunts/me").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
                 .requestMatchers(HttpMethod.GET, "/emprunts/me/historique").hasAnyRole("UTILISATEUR", "BIBLIOTHECAIRE", "ADMINISTRATEUR")
@@ -106,8 +107,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
         return config.getAuthenticationManager();
     }
 

@@ -50,6 +50,17 @@ VALUES (true, 'old@elaff.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUj
 insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
 VALUES (false, 'jean.bono@boucherie.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Bono', 'Jean',
         'ADMINISTRATEUR');
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'aragorn@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Elessar', 'Aragorn', 'ADMINISTRATEUR');
+
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'geralt@witcher.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'De Riv', 'Geralt', 'UTILISATEUR');
+
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'legolas@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Feuilleverte', 'Legolas', 'UTILISATEUR');
+
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'neo@matrix.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Anderson', 'Neo', 'UTILISATEUR');
 -- Mot de passe commun: Aaaaaaaaaa1+
 
 

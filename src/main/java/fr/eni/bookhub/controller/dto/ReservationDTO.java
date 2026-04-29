@@ -1,4 +1,6 @@
 package fr.eni.bookhub.controller.dto;
 
-public record ReservationDTO(Long livreId, Long reservateurId) {
+import org.jspecify.annotations.Nullable;
+
+public record ReservationDTO(@Nullable Long id, Long livreId, Long reservateurId) {
 }

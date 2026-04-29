@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,9 +36,11 @@ public class Utilisateur implements Serializable , UserDetails {
     @JsonIgnore
     private String motDePasseChiffre;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "utilisateur")
     private List<Reservation> reservations;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "utilisateur")
     private List<Emprunt> emprunts;
 

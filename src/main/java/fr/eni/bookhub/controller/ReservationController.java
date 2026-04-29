@@ -48,6 +48,12 @@ public class ReservationController {
         return ResponseEntity.status(201).build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimeReservation(@AuthenticationPrincipal Utilisateur user, @PathVariable("id") Long id) throws AccessDeniedException {
+        reservationService.verifieSiUtilisateurPeutSupprimer(user, id);
+        reservationService.supprimeReservation(id);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/me/profil")
     public ResponseEntity<List<ReservationProfilDTO>> getReservationsProfil(
             @AuthenticationPrincipal Utilisateur utilisateur) {

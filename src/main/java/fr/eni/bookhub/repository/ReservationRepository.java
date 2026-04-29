@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -25,4 +27,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByUtilisateurAndEstSupprimee(Utilisateur utilisateur, boolean supprimee);
 
     List<Reservation> findAllByLivreAndEstSupprimeeIsFalse(Livre livre);
+
+    List<Reservation> findAllByLivreIdAndEstSupprimeeIsFalse(Long aLong);
+
+    List<Reservation> findAllByDateRetraitMaxAndEstSupprimeeIsFalse(LocalDate date);
+
+    Optional<Reservation> findFirstByLivreAndEstSupprimeeIsFalseOrderByRangAsc(Livre livre);
+
+    Optional<Reservation> findById(Long id);
 }
