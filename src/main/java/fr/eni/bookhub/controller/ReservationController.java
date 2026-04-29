@@ -1,6 +1,7 @@
 package fr.eni.bookhub.controller;
 
 import fr.eni.bookhub.controller.dto.ReservationDTO;
+import fr.eni.bookhub.controller.dto.ReservationProfilDTO;
 import fr.eni.bookhub.controller.dto.ReservationResponseDTO;
 import fr.eni.bookhub.entity.Reservation;
 import fr.eni.bookhub.entity.Utilisateur;
@@ -45,6 +46,12 @@ public class ReservationController {
 
         reservationService.reserverLivre(utilisateur, reservationDTO, dateReservation);
         return ResponseEntity.status(201).build();
+    }
+
+    @GetMapping("/me/profil")
+    public ResponseEntity<List<ReservationProfilDTO>> getReservationsProfil(
+            @AuthenticationPrincipal Utilisateur utilisateur) {
+        return ResponseEntity.ok(reservationService.getReservationsProfilUtilisateur(utilisateur));
     }
 
 }

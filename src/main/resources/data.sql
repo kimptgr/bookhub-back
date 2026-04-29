@@ -276,4 +276,11 @@ INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionn
 
 -- retard
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
-    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE - INTERVAL '10 Days'),  4, 3);
+    ((CURRENT_DATE - INTERVAL '25 Days'), null, (CURRENT_DATE - INTERVAL '10 Days'),  4, 3);
+
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '25 Days'), null, (CURRENT_DATE - INTERVAL '10 Days'),  12, 1);
+
+-- livre rendu
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '20 Days'), (CURRENT_DATE - INTERVAL '10 Days'), (CURRENT_DATE - INTERVAL '14 Days'),  12, 1);

@@ -1,8 +1,6 @@
 package fr.eni.bookhub.service;
 
-import fr.eni.bookhub.controller.dto.EmpruntDTO;
-import fr.eni.bookhub.controller.dto.EmpruntMisAJourDTO;
-import fr.eni.bookhub.controller.dto.UpdateEmpruntDTO;
+import fr.eni.bookhub.controller.dto.*;
 import fr.eni.bookhub.entity.*;
 import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.IdDiscordantsException;
@@ -68,6 +66,7 @@ public class EmpruntService {
 
     /**
      * Si j'ai du retard je ne peux pas emprunter
+     *
      * @param emprunteur
      */
     private void verifiePasDeRetard(Utilisateur emprunteur) {
@@ -79,11 +78,13 @@ public class EmpruntService {
     }
 
     private void verifieLivrePasEmprunte(Livre livre) {
-        if (empruntRepository.existsByLivreAndDateRetourEffectifIsNull(livre)) throw new LivreDejaEmprunteException(livre.getId().toString());
+        if (empruntRepository.existsByLivreAndDateRetourEffectifIsNull(livre))
+            throw new LivreDejaEmprunteException(livre.getId().toString());
     }
 
     /**
      * Pour le moment les cas prévus sont : rendre un livre, prolonger un emprunt
+     *
      * @param updateEmpruntDTO
      * @return
      */
@@ -131,4 +132,39 @@ public class EmpruntService {
 
         return empruntMapper.toEmpruntMisAJourDTO(empruntRepository.save(emprunt));
     }
+
+    // Dans EmpruntService, ajoute ces deux méthodes
+
+    public List<EmpruntEnCoursDTO> getEmpruntsEnCours(Utilisateur utilisateur) {
+        LocalDate today = LocalDate.now();
+        return empruntRepository
+                .findByUtilisateurAndDateRetourEffectifIsNull(utilisateur)
+                .stream()
+                .map(e -> new EmpruntEnCoursDTO(
+                        e.getId(),
+                        e.getLivre().getTitre(),
+                        e.getLivre().getUrlImage(),
+                        e.getDateRetourPrevisionnel(),
+                        e.getDateRetourPrevisionnel() != null
+                        //Pour calculer le retard
+                        && e.getDateRetourPrevisionnel().isBefore(today)
+                ))
+                .toList();
+    }
+
+    public List<EmpruntHistoriqueDTO> getHistoriqueEmprunts(Utilisateur utilisateur) {
+        return empruntRepository
+                .findByUtilisateurAndDateRetourEffectifIsNotNull(utilisateur)
+                .stream()
+                .map(e -> new EmpruntHistoriqueDTO(
+                        e.getId(),
+                        e.getLivre().getTitre(),
+                        e.getLivre().getUrlImage(),
+                        e.getDateEmprunt(),
+                        e.getDateRetourEffectif()
+                ))
+                .toList();
+    }
+
+
 }
