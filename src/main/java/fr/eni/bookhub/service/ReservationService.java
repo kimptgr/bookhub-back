@@ -1,6 +1,7 @@
 package fr.eni.bookhub.service;
 
 import fr.eni.bookhub.controller.dto.ReservationDTO;
+import fr.eni.bookhub.controller.dto.ReservationProfilDTO;
 import fr.eni.bookhub.controller.dto.ReservationResponseDTO;
 import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Livre;
@@ -187,4 +188,20 @@ public class ReservationService {
             throw new UtilisateurQuiEmprunteNePeutPasReserverException();
         }
     }
+
+    public List<ReservationProfilDTO> getReservationsProfilUtilisateur(Utilisateur utilisateur) {
+        return reservationRepository
+                .findByUtilisateurAndEstSupprimee(utilisateur, false)
+                .stream()
+                .map(r -> new ReservationProfilDTO(
+                        r.getId(),
+                        r.getLivre().getTitre(),
+                        r.getLivre().getUrlImage(),
+                        r.getRang(),
+                        r.getStatut().getLibelle().toString(),
+                        r.getDateDisponibilite()
+                ))
+                .toList();
+    }
+
 }

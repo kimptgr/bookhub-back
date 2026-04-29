@@ -18,4 +18,8 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
     boolean existsByLivreAndDateRetourEffectifIsNull(Livre livre);
 
     boolean existsByLivreAndUtilisateurAndDateRetourEffectifIsNull(Livre livre, Utilisateur utilisateur);
+
+    List<Emprunt> findByUtilisateurAndDateRetourEffectifIsNull(Utilisateur utilisateur);
+
+    List<Emprunt> findByUtilisateurAndDateRetourEffectifIsNotNull(Utilisateur utilisateur);
 }
