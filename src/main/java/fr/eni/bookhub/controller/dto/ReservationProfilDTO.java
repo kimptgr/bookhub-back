@@ -8,6 +8,7 @@ public record ReservationProfilDTO(
         String urlImageLivre,
         int rang,
         String statutLibelle,
-        LocalDate dateDisponibilite
+        LocalDate dateDisponibilite,
+        boolean disponible
 ) {
 }
