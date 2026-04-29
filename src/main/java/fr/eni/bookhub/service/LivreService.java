@@ -150,8 +150,9 @@ public class LivreService {
         return livresPage.map(livreMapper::toLivreView);
     }
 
-    public Livre chercheLivreParId(Long id) {
-        return livreRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Livre avec l'id " + id + " n'existe pas"));
+    public LivreView chercheLivreParId(Long id) {
+        Livre livre = livreRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Livre avec l'id " + id + " n'existe pas"));
+        return livreMapper.toLivreView(livre);
     }
 
     public Livre chercheLivreParIdEtUtilisable(Long id) {

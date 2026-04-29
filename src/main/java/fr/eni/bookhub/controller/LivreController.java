@@ -45,7 +45,7 @@ public class LivreController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Livre> chercheLivre(@PathVariable Long id) {
+    public ResponseEntity<LivreView> chercheLivre(@PathVariable Long id) {
         return ResponseEntity.ok(livreService.chercheLivreParId(id));
     }
 
