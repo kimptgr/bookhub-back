@@ -11,7 +11,8 @@ public class ProfilMapper {
                 utilisateur.getId(),
                 utilisateur.getNom(),
                 utilisateur.getPrenom(),
-                utilisateur.getEmail()
+                utilisateur.getEmail(),
+                utilisateur.getTelephone()
         );
     }
 }

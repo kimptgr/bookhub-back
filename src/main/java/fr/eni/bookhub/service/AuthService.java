@@ -40,6 +40,7 @@ public class AuthService {
         utilisateur.setMotDePasseChiffre(passwordEncoder.encode(request.password()));
         utilisateur.setRole(Utilisateur.Role.UTILISATEUR);
         utilisateur.setDesactive(false);
+        utilisateur.setTelephone(request.telephone());
 
         utilisateurRepository.save(utilisateur);
     }
