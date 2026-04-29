@@ -35,21 +35,21 @@ VALUES ('NOVELLA');
 INSERT INTO genres (libelle)
 VALUES ('ROMAN');
 
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
 VALUES (false, 'mtartine@dej.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Tartine', 'Marie',
-        'UTILISATEUR');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+        'UTILISATEUR', '0299010203');
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
 VALUES (false, 'admin@mtartine.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Tartine', 'Marie',
-        'BIBLIOTHECAIRE');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+        'BIBLIOTHECAIRE', '0212456789');;
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
 VALUES (false, 'super@admin.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Super', 'Admin',
-        'ADMINISTRATEUR');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+        'ADMINISTRATEUR', '06-06-52-69-09');
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
 VALUES (true, 'old@elaff.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Old', 'Compte',
-        'UTILISATEUR');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+        'UTILISATEUR', '0606060606');
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
 VALUES (false, 'jean.bono@boucherie.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Bono', 'Jean',
-        'ADMINISTRATEUR');
+        'ADMINISTRATEUR', '0123456789');;
 INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
 VALUES (false, 'aragorn@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Elessar', 'Aragorn', 'ADMINISTRATEUR');
 

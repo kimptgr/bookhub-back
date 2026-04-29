@@ -29,6 +29,9 @@ public class Utilisateur implements Serializable , UserDetails {
 
     private String prenom;
 
+    // String pour être sur de garder le 0 devant et varchar(20) si les gens mettent des point, des tirets ou que numéro international
+    private String telephone;
+
     @Column(unique = true, nullable = false)
     private String email;
 

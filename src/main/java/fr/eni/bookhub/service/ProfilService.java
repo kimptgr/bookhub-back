@@ -48,6 +48,8 @@ public class ProfilService {
         utilisateur.setNom(dto.nom());
         utilisateur.setPrenom(dto.prenom());
         utilisateur.setEmail(dto.email());
+        utilisateur.setTelephone(dto.telephone());
+
         utilisateurRepository.save(utilisateur);
 
         return jwtUtils.generateToken(utilisateur.getEmail(), utilisateur.getId(), utilisateur.getRole().name());
