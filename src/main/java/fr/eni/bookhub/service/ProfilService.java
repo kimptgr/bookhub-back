@@ -10,6 +10,7 @@ import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.EmailDejaUtiliseException;
 import fr.eni.bookhub.mapper.ProfilMapper;
 import fr.eni.bookhub.repository.UtilisateurRepository;
+import fr.eni.bookhub.utils.TelephoneFormatter;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +49,7 @@ public class ProfilService {
         utilisateur.setNom(dto.nom());
         utilisateur.setPrenom(dto.prenom());
         utilisateur.setEmail(dto.email());
-        utilisateur.setTelephone(dto.telephone());
+        utilisateur.setTelephone(dto.telephone() != null ? TelephoneFormatter.normaliser(dto.telephone()) : null);
 
         utilisateurRepository.save(utilisateur);
 
