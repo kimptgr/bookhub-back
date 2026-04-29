@@ -8,8 +8,7 @@ import fr.eni.bookhub.exception.ElementDejaExistantException;
 import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
 import fr.eni.bookhub.mapper.LivreMapper;
-import fr.eni.bookhub.repository.LivreRepository;
-import fr.eni.bookhub.repository.StatutRepository;
+import fr.eni.bookhub.repository.*;
 import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.specification.LivreSpecification;
 import jakarta.transaction.Transactional;
@@ -22,7 +21,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +41,10 @@ public class LivreService {
 
     private final LivreSpecification livreSpecification;
 
+    private final EmpruntRepository empruntRepository;
+    private final EtatRepository etatRepository;
     private final LivreRepository livreRepository;
-    private final StatutRepository statutRepository;
+    private final ReservationRepository reservationRepository;
 
     // Vérifie que la string ressemble à un ISBN, cette regex peut matcher avec des ISBN non valides
     private static final Pattern isbnPattern = Pattern.compile("[0-9\\- ]{10,17}X?");
@@ -110,21 +113,46 @@ public class LivreService {
                 });
     }
 
+    /**
+     * Passe le livre en statut Inutilisable
+     * @param id
+     */
     @Transactional
     public void deleteLivre(Long id) {
         Livre livre = livreRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Le livre avec l'id " + id + " n'existe pas"));
 
-        // Si le livre à des réservations en attente, on les annule toutes
-        if (!livre.getReservations().isEmpty()) {
-            Statut statutAnnulee = statutRepository.findByLibelle(Statut.Code.ANNULEE)
-                    .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des statuts"));
+        // RESERVATIONS
+        List<Reservation> reservations = livre.getReservations().stream()
+                .filter(reservation ->
+                        reservation.getStatut().getLibelle().equals(Statut.Code.SUR_LISTE_D_ATTENTE) ||
+                        reservation.getStatut().getLibelle().equals(Statut.Code.EN_ATTENTE_DE_RETRAIT)
+                ).toList();
 
-            livre.getReservations().forEach(reservation -> reservation.setStatut(statutAnnulee));
-            livreRepository.save(livre);
+        // Si le livre à des réservations en attente, on les annule toutes
+        if (!reservations.isEmpty()) {
+            livre.getReservations().forEach(reservation -> {
+                reservation.setEstSupprimee(true);
+                reservationRepository.save(reservation);
+            });
         }
 
-        livreRepository.deleteById(id);
+        // EMPRUNTS
+        Optional<Emprunt> empruntOpt = livre.getEmprunts().stream()
+                .filter(emprunt -> emprunt.getDateRetourEffectif() == null).findAny();
+
+        // Si le livre a un emprunt en cours, on enregistre le retour
+        empruntOpt.ifPresent(emprunt -> {
+            emprunt.setDateRetourEffectif(LocalDate.now());
+            empruntRepository.save(emprunt);
+        });
+
+        // LIVRE
+        Etat etatInutilisable = etatRepository.findByLibelle(Etat.Code.INUTILISABLE)
+                    .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des statuts"));
+        livre.setEtat(etatInutilisable);
+
+        livreRepository.save(livre);
     }
 
 
