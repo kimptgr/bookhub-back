@@ -66,10 +66,6 @@ public class LivreController {
         String[] libellesEtatsArray = libellesEtats.split(",");
         Etat.Code[] codesEtat;
 
-        System.out.println("Avant");
-        System.out.println(libellesEtatsArray[0]);
-        System.out.println("Après");
-
         if (!libellesEtatsArray[0].isEmpty()) {
             codesEtat = new Etat.Code[libellesEtatsArray.length];
 
