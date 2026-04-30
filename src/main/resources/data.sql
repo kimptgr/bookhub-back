@@ -35,32 +35,22 @@ VALUES ('NOVELLA');
 INSERT INTO genres (libelle)
 VALUES ('ROMAN');
 
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role, telephone)
 VALUES (false, 'mtartine@dej.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Tartine', 'Marie',
         'UTILISATEUR', '0299010203');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role, telephone)
 VALUES (false, 'admin@mtartine.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Tartine', 'Marie',
         'BIBLIOTHECAIRE', '0212456789');;
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role, telephone)
 VALUES (false, 'super@admin.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Super', 'Admin',
         'ADMINISTRATEUR', '06-06-52-69-09');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role, telephone)
 VALUES (true, 'old@elaff.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Old', 'Compte',
         'UTILISATEUR', '0606060606');
-insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role,telephone)
+insert into utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role, telephone)
 VALUES (false, 'jean.bono@boucherie.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Bono', 'Jean',
         'ADMINISTRATEUR', '0123456789');;
-INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
-VALUES (false, 'aragorn@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Elessar', 'Aragorn', 'ADMINISTRATEUR');
 
-INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
-VALUES (false, 'geralt@witcher.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'De Riv', 'Geralt', 'UTILISATEUR');
-
-INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
-VALUES (false, 'legolas@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Feuilleverte', 'Legolas', 'UTILISATEUR');
-
-INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
-VALUES (false, 'neo@matrix.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Anderson', 'Neo', 'UTILISATEUR');
 -- Mot de passe commun: Aaaaaaaaaa1+
 
 
@@ -277,13 +267,8 @@ INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionn
                     ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  1, 1);
 -- des emprunts max
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
-    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  5, 2);
+    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  5, 1);
 
-INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
-    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  2, 2);
-
-INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
-    ((CURRENT_DATE - INTERVAL '3 Days'), null, (CURRENT_DATE + INTERVAL '10 Days'),  3, 2);
 
 -- retard
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
@@ -295,3 +280,71 @@ INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionn
 -- livre rendu
 INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
     ((CURRENT_DATE - INTERVAL '20 Days'), (CURRENT_DATE - INTERVAL '10 Days'), (CURRENT_DATE - INTERVAL '14 Days'),  12, 1);
+
+--======================================================================================================================
+--SCENARIO livre en attente de retrait depuis 14j sans fil d'attente  user id 6
+
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'neo@matrix.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Anderson', 'Neo', 'UTILISATEUR');
+-- 18
+INSERT INTO auteurs (nom, prenom) VALUES ('GIBSON', 'William');         -- 20
+INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
+VALUES ('1984-07-01', 1, '9780441569595', 'Neuromancer',
+        'https://www.babelio.com/couv/CVT_Neuromancien_3177.jpg',
+        'Un hacker est engagé pour infiltrer une intelligence artificielle dans un univers cyberpunk fondateur.');
+
+INSERT INTO livres_genres VALUES (9, 13);
+INSERT INTO livres_auteurs VALUES (18, 13);
+insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
+                          id_livre, id_statut, id_utilisateur)
+values ((CURRENT_DATE - INTERVAL '15 days'), (CURRENT_DATE - INTERVAL '1 days'), false, 1, (CURRENT_DATE - INTERVAL '15 days'), 13, 2, 6);
+
+-- SCENARIO livre en attente de retrait depuis 14j avec mise à jour fil d'attente u.id 7
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'geralt@witcher.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'De Riv', 'Geralt', 'UTILISATEUR');
+
+
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'aragorn@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Elessar', 'Aragorn', 'ADMINISTRATEUR');
+
+
+
+INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
+VALUES ('2025-11-06', 1, '9782266325325', 'La Librairie des livres interdits',
+        'https://m.media-amazon.com/images/I/513xVAbsVwL._SX195_.jpg',
+        'Mitch, libraire passionné, est arrêté un matin pour un crime impensable : il a transgressé la loi en vendant des livres interdits.');
+
+INSERT INTO auteurs (nom, prenom) VALUES ('LEVY', 'Marc');
+INSERT INTO livres_genres VALUES (9, 14);
+INSERT INTO livres_auteurs VALUES (19, 14);
+
+-- resa en retard
+insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
+                          id_livre, id_statut, id_utilisateur)
+values ((CURRENT_DATE - INTERVAL '15 days'), (CURRENT_DATE - INTERVAL '1 days'), false, 1, (CURRENT_DATE - INTERVAL '15 days'), 14, 2, 7);
+
+-- resa prochaine
+insert into reservations (date_disponibilite, date_retrait_max, est_supprimee, rang, date_demande_reservation,
+                          id_livre, id_statut, id_utilisateur)
+values (null, null, false, 2, (CURRENT_DATE - INTERVAL '4 days'), 14, 1, 8);
+
+
+-- #### Emprunt non retourné passe à retard u.id 8 l.id 15
+INSERT INTO utilisateurs (desactive, email, mot_de_passe_chiffre, nom, prenom, role)
+VALUES (false, 'legolas@middleearth.com', '$2a$10$26.ezViBvLzeEl1XK5v9L.EUtJ4ApAsYdvNLf7WUjF4QmZuO0rak.', 'Feuilleverte', 'Legolas', 'UTILISATEUR');
+
+INSERT INTO livres (date_de_parution, id_etat, isbn, titre, url_image, synopsis)
+VALUES ('2007-04-12', 1, '9782603014097', 'Guide Delachaux des plantes par la couleur : 1150 Fleurs, graminées, arbres et arbustes',
+        'https://www.babelio.com/couv/CVT_Guide-Delachaux-des-plantes-par-la-couleur--1150-_7483.jpg',
+        'Le premier guide botanique COMPLET qui permet de déterminer les plantes PAR LA COULEUR. Idéal pour débuter. Les fleurs nous interpellent d''abord par leur couleur. Elles sont blanches, jaunes, rouges, roses, bleues ou vertes. ');
+
+INSERT INTO auteurs (nom, prenom) VALUES ('CASPARY', 'Claus');
+INSERT INTO livres_genres VALUES (2, 15);
+INSERT INTO livres_auteurs VALUES (20, 15);
+
+INSERT INTO emprunts (date_emprunt, date_retour_effectif, date_retour_previsionnel, id_livre, id_utilisateur) VALUES
+    ((CURRENT_DATE - INTERVAL '15 Days'), null, (CURRENT_DATE - INTERVAL '1 Days'),  15, 8);
+
+--SCENARIO nouvelle reservation
+
+

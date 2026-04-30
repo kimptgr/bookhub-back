@@ -15,11 +15,13 @@ import fr.eni.bookhub.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class EmpruntService {
@@ -67,7 +69,6 @@ public class EmpruntService {
     /**
      * Si j'ai du retard je ne peux pas emprunter
      *
-     * @param emprunteur
      */
     private void verifiePasDeRetard(Utilisateur emprunteur) {
         LocalDate today = LocalDate.now();
@@ -85,8 +86,6 @@ public class EmpruntService {
     /**
      * Pour le moment les cas prévus sont : rendre un livre, prolonger un emprunt
      *
-     * @param updateEmpruntDTO
-     * @return
      */
     @Transactional
     public EmpruntMisAJourDTO updateEmprunt(UpdateEmpruntDTO updateEmpruntDTO) {
@@ -167,4 +166,18 @@ public class EmpruntService {
     }
 
 
+    /**
+     * Récupère les emprunts en retard et met à jour leur état
+     */
+    @Transactional
+    public void recupereLesEmpruntsEnRetard(LocalDate date) {
+    List<Emprunt> retards = empruntRepository.findAllByDateRetourPrevisionnelBeforeAndDateRetourEffectifIsNull(date);
+
+    //récupère le livre et met état à en retard
+        for (Emprunt retard : retards) {
+            String mail = retard.getUtilisateur().getEmail();
+            String titre = retard.getLivre().getTitre();
+            log.warn("L'utilisateur {} a du retard sur le livre {}.", mail, titre);
+        }
+    }
 }

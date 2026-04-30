@@ -24,4 +24,6 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
     List<Emprunt> findByUtilisateurAndDateRetourEffectifIsNotNull(Utilisateur utilisateur);
 
     boolean existsByLivreIdAndDateRetourEffectifIsNull(Long livreId);
+
+    List<Emprunt> findAllByDateRetourPrevisionnelBeforeAndDateRetourEffectifIsNull(LocalDate date);
 }

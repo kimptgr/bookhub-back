@@ -31,7 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Log4j2
 public class ReservationService {
-    private static final int MAX_RESERVATION = 3;
+    private static final int MAX_RESERVATION = 5;
 
     private final LivreService livreService;
 
@@ -207,7 +207,7 @@ public class ReservationService {
     }
 
 /**
- * Récupère les réservations expirées
+ * Récupère les réservations expirées, les mets à jours si
  * - Update l'état estSupprimée à vrai
  * - Met à jour la queue
  * - Logs quand la réservation change d'emprunteur
@@ -227,7 +227,7 @@ public class ReservationService {
             Long oldReservateurId = expiree.map(r -> r.getUtilisateur().getId()).orElse(null);
 
 
-            supprimeReservation(expiree.get().getId());
+            expiree.ifPresent(r -> supprimeReservation(r.getId()));
 
             Optional<Reservation> nouveauReserveur = reservationRepository
                     .findFirstByLivreAndEstSupprimeeIsFalseOrderByRangAsc(livre);
@@ -235,8 +235,8 @@ public class ReservationService {
             Long nouveauReserveurId = nouveauReserveur.map(r -> r.getUtilisateur().getId()).orElse(null);
 
             if (!Objects.equals(oldReservateurId, nouveauReserveurId)) {
-                log.warn("Main reserver changed for book {}: {} -> {}",
-                        livre.getId(),
+                log.warn("La réservation à changer pour le livre {}: {} -> {}",
+                        livre.getTitre(),
                         oldReservateurId,
                         nouveauReserveurId);
             }

@@ -1,0 +1,15 @@
+meta {
+  name: scheduled
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{BASE_URL}}/test
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
