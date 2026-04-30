@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
+
+        ex.getBindingResult().getGlobalErrors().forEach(error ->
+                errors.put(error.getObjectName(), error.getDefaultMessage())
+        );
+
         log.error(errors.toString());
         return ResponseEntity.status(400).body(new APIError("400", errors.toString(), Instant.now()));
     }
