@@ -2,11 +2,13 @@ package fr.eni.bookhub.controller;
 
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
-import fr.eni.bookhub.entity.Livre;
-import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
+import fr.eni.bookhub.entity.Etat;
+import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.service.LivreService;
-import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,8 +22,6 @@ public class LivreController {
 
     private final LivreService livreService;
 
-    //TODO delete qud security
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<Void> ajoutLivre(@Valid @RequestBody LivreDTO livreDTO) {
         livreService.ajoutLivre(livreDTO);
@@ -29,23 +29,61 @@ public class LivreController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> modifierLivre(@Valid @RequestBody UpdateLivreDTO livreDTO, @PathVariable Long id) {
+        livreService.modifierLivre(livreDTO, id);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimerLivre(@PathVariable Long id){
+
+        livreService.deleteLivre(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Livre> chercheLivre(@PathVariable Long id) {
+    public ResponseEntity<LivreView> chercheLivre(@PathVariable Long id) {
         return ResponseEntity.ok(livreService.chercheLivreParId(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Livre>> rechercherLivres(@Nullable @RequestParam String saisie,
-                                                       @RequestParam String genres,
-                                                       @RequestParam String disponibilite,
-                                                       @RequestParam Integer page,
-                                                       @RequestParam Integer size) {
+    /**
+     * Recherche un livre, deux cas possibles :<br>
+     * - Recherche par ISBN (il doit être exact), dans ce cas les filtres de genre et d'état (disponibilité) sont ignorés<br>
+     * - Recherche par titre (partiel) OU par nom d'auteur⋅ice (partiel), dans ce cas les autres filtres sont appliqués<br>
+     *
+     * @return une liste de livres paginée qui correspond aux critères de recherche
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<LivreView>> rechercherLivres(
+            @RequestParam(defaultValue = "", required = false) String saisie,
+            @RequestParam(value = "genres", defaultValue = "", required = false) String libellesGenres,
+            @RequestParam(value = "disponibilites", defaultValue = "", required = false) String libellesEtats,
+            @RequestParam(value = "page") @PositiveOrZero(message = "Le numéro de page doit être un entier non négatif") Integer numeroPage,
+            @RequestParam(value = "size") @Positive(message = "Le nombre d'éléments par page doit être strictement positif") Integer taillePage
+    ) {
+        String[] libellesEtatsArray = libellesEtats.split(",");
+        Etat.Code[] codesEtat;
 
-        RechercheDTO rechercheDTO = new RechercheDTO(saisie, genres.split(","), disponibilite);
+        if (!libellesEtatsArray[0].isEmpty()) {
+            codesEtat = new Etat.Code[libellesEtatsArray.length];
 
-        Page<Livre> livres = this.livreService.rechercheLivres(rechercheDTO, page, size);
+            try {
+                for (int i = 0; i < libellesEtatsArray.length; i++) {
+                    codesEtat[i] = Etat.Code.valueOf(libellesEtatsArray[i]);
+                }
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().build();
+            }
 
-        return ResponseEntity.ok(livres);
+        } else {
+            codesEtat = new Etat.Code[0];
+        }
+
+        RechercheDTO rechercheDTO = new RechercheDTO(saisie, libellesGenres.split(","), codesEtat);
+
+        return ResponseEntity.ok(this.livreService.rechercheLivres(rechercheDTO, numeroPage, taillePage));
     }
 
 }

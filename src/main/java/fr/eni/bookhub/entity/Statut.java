@@ -13,6 +13,14 @@ public class Statut {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private String libelle;
+    private Code libelle;
+
+    public enum Code {
+        SUR_LISTE_D_ATTENTE,
+        EN_ATTENTE_DE_RETRAIT,
+        CLOTUREE,
+        ANNULEE
+    }
 }

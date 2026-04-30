@@ -2,14 +2,14 @@ package fr.eni.bookhub.service;
 
 import fr.eni.bookhub.controller.dto.LivreDTO;
 import fr.eni.bookhub.controller.dto.RechercheDTO;
-import fr.eni.bookhub.entity.Auteur;
-import fr.eni.bookhub.entity.Genre;
-import fr.eni.bookhub.entity.Livre;
+import fr.eni.bookhub.controller.dto.UpdateLivreDTO;
+import fr.eni.bookhub.entity.*;
+import fr.eni.bookhub.exception.ElementDejaExistantException;
+import fr.eni.bookhub.exception.ElementNotFoundException;
 import fr.eni.bookhub.exception.GenresNonCorrespondantException;
-import fr.eni.bookhub.exception.LivreDejaExistantException;
-import fr.eni.bookhub.exception.LivreNotFoundException;
 import fr.eni.bookhub.mapper.LivreMapper;
-import fr.eni.bookhub.repository.LivreRepository;
+import fr.eni.bookhub.repository.*;
+import fr.eni.bookhub.repository.view.LivreView;
 import fr.eni.bookhub.specification.LivreSpecification;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static fr.eni.bookhub.utils.TextFormatter.isbnFormatter;
 
@@ -32,24 +36,30 @@ public class LivreService {
     private final LivreMapper livreMapper;
 
     private final AuteurService auteurService;
-    private final GenreService genreService;
     private final EtatService etatService;
+    private final GenreService genreService;
 
+    private final LivreSpecification livreSpecification;
+
+    private final EmpruntRepository empruntRepository;
+    private final EtatRepository etatRepository;
     private final LivreRepository livreRepository;
+    private final ReservationRepository reservationRepository;
+
+    // Vérifie que la string ressemble à un ISBN, cette regex peut matcher avec des ISBN non valides
+    private static final Pattern isbnPattern = Pattern.compile("[0-9\\- ]{10,17}X?");
 
     @Transactional
     public void ajoutLivre(@NotNull LivreDTO livreDTO) {
 
-        if (livreRepository.findByIsbn(isbnFormatter(livreDTO.isbn())).isPresent()) {
-            throw new LivreDejaExistantException(livreDTO.isbn());
-        }
+        verifierIsbnUnique(livreDTO.isbn(), null);
 
         Livre livre = livreMapper.toEntity(livreDTO);
         List<Auteur> auteurs = auteurService.retrouverAuteurs(livreDTO.auteurs());
         livre.setAuteurs(auteurs);
         List<Genre> genres = genreService.retrouverGenres(livreDTO.genres());
         if (genres.size() != livreDTO.genres().size())
-            throw new GenresNonCorrespondantException("");
+            throw new GenresNonCorrespondantException();
 
         livre.setGenres(genres);
         livre.setEtat(etatService.retrouveEtat(livreDTO.idEtat()));
@@ -57,27 +67,134 @@ public class LivreService {
         livreRepository.save(livre);
     }
 
-    public Page<Livre> rechercheLivres(RechercheDTO rechercheDTO, Integer page, Integer size) {
+    @Transactional
+    public void modifierLivre(UpdateLivreDTO livreDTO, Long id) {
 
-        Specification<Livre> livreSpecification;
-        PageRequest pageRequest;
+        Livre livre = livreRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Le livre avec l'id " + id + " n'a pas été trouvé ou n'existe pas"));
 
-        // Cas où on a saisi un ISBN, on ignore les filtres et le Pageable
-        if (rechercheDTO.saisie().matches("^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$")) {
-            livreSpecification = LivreSpecification.getSpecificationsForIsbn(rechercheDTO.saisie());
-            pageRequest = PageRequest.of(0, 20);
-
-            return livreRepository.findAll(livreSpecification, pageRequest);
+        if (livreDTO.isbn() != null) {
+            verifierIsbnUnique(livreDTO.isbn(), id);
         }
 
-        // Cas où on recherche par titre ou auteur·ice
-        pageRequest = PageRequest.of(page, size, Sort.by("titre").ascending());
-        livreSpecification = LivreSpecification.getSpecificationsForGenreAndEtat(rechercheDTO);
+        livreMapper.updateEntity(livreDTO, livre);
 
-        return livreRepository.findAll(livreSpecification, pageRequest);
+        if (livreDTO.auteurs() != null) {
+            List<Auteur> auteurs = auteurService.retrouverAuteurs(livreDTO.auteurs());
+            livre.setAuteurs(auteurs);
+        }
+
+        if (livreDTO.genres() != null) {
+            List<Genre> genres = genreService.retrouverGenres(livreDTO.genres());
+            if (genres.size() != livreDTO.genres().size())
+                throw new GenresNonCorrespondantException();
+            livre.setGenres(genres);
+        }
+
+        if (livreDTO.idEtat() != null) {
+            livre.setEtat(etatService.retrouveEtat(livreDTO.idEtat()));
+        }
+
+        livreRepository.save(livre);
+
     }
 
-    public Livre chercheLivreParId(Long id) {
-        return livreRepository.findById(id).orElseThrow(()-> new LivreNotFoundException(id));
+    /*
+    je vérifie si l'ISBN est unique
+    dans le cas d'un livre ajouté, si on remonte un id de livre existant, on déclenche l'exception
+    dans le cas d'un livre à modifier, si on remonte un id différent de celui que l'on modifie, on déclenche l'exception
+    cela permet de vérifier, par exemple s'il y a eu une erreur de saisie d'ISBN et qu'il est modifié
+     */
+    private void verifierIsbnUnique(String isbn, Long idExclu) {
+        livreRepository.findByIsbn(isbnFormatter(isbn))
+                .filter(l -> idExclu == null || !l.getId().equals(idExclu))
+                .ifPresent(l -> {
+                    throw new ElementDejaExistantException(isbn);
+                });
+    }
+
+    /**
+     * Passe le livre en statut Inutilisable
+     * @param id
+     */
+    @Transactional
+    public void deleteLivre(Long id) {
+        Livre livre = livreRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Le livre avec l'id " + id + " n'existe pas"));
+
+        // RESERVATIONS
+        List<Reservation> reservations = livre.getReservations().stream()
+                .filter(reservation ->
+                        reservation.getStatut().getLibelle().equals(Statut.Code.SUR_LISTE_D_ATTENTE) ||
+                        reservation.getStatut().getLibelle().equals(Statut.Code.EN_ATTENTE_DE_RETRAIT)
+                ).toList();
+
+        // Si le livre à des réservations en attente, on les annule toutes
+        if (!reservations.isEmpty()) {
+            livre.getReservations().forEach(reservation -> {
+                reservation.setEstSupprimee(true);
+                reservationRepository.save(reservation);
+            });
+        }
+
+        // EMPRUNTS
+        Optional<Emprunt> empruntOpt = livre.getEmprunts().stream()
+                .filter(emprunt -> emprunt.getDateRetourEffectif() == null).findAny();
+
+        // Si le livre a un emprunt en cours, on enregistre le retour
+        empruntOpt.ifPresent(emprunt -> {
+            emprunt.setDateRetourEffectif(LocalDate.now());
+            empruntRepository.save(emprunt);
+        });
+
+        // LIVRE
+        Etat etatInutilisable = etatRepository.findByLibelle(Etat.Code.INUTILISABLE)
+                    .orElseThrow(() -> new ElementNotFoundException("Erreur lors de la récupération des statuts"));
+        livre.setEtat(etatInutilisable);
+
+        livreRepository.save(livre);
+    }
+
+
+
+    public Page<LivreView> rechercheLivres(RechercheDTO rechercheDTO, int numeroPage, int taillePage) {
+
+        Specification<Livre> specification;
+        PageRequest pageRequest;
+        Matcher isbnMatcher = isbnPattern.matcher(rechercheDTO.saisie());
+
+        // Cas où on a saisi un ISBN, on ignore les filtres et les éléments de pagination
+        if (isbnMatcher.matches()) {
+            specification = livreSpecification.getSpecificationsForIsbn(isbnFormatter(rechercheDTO.saisie()));
+            pageRequest = PageRequest.of(0, 12);
+
+        } else {
+            // Cas où on recherche par titre ou auteur·ice, on applique les filtres de genre et d'état
+            specification = livreSpecification.getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(rechercheDTO);
+            pageRequest = PageRequest.of(numeroPage, taillePage, Sort.by("titre").ascending());
+        }
+
+        Page<Livre> livresPage = livreRepository.findAll(specification, pageRequest);
+        return livresPage.map(livreMapper::toLivreView);
+    }
+
+    public LivreView chercheLivreParId(Long id) {
+        Livre livre = livreRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Livre avec l'id " + id + " n'existe pas"));
+        return livreMapper.toLivreView(livre);
+    }
+
+    public Livre chercheLivreParIdEtUtilisable(Long id) {
+        return livreRepository.findByIdAndEtatLibelleNot(id, Etat.Code.INUTILISABLE).orElseThrow(() -> new ElementNotFoundException("Livre non trouvé (id: " + id + ")"));
+    }
+
+    public void updateEtat(Livre livre, Etat.Code etatLabel) {
+        Etat etat = etatService.retrouveEtatParLibelle(etatLabel);
+        livre.setEtat(etat);
+        livreRepository.save(livre);
+    }
+
+    public Livre chercheLivreParIdEtDisponibleOuReserve(Long id) {
+        List<Etat.Code> etatsempruntables = List.of(Etat.Code.DISPONIBLE, Etat.Code.RESERVE);
+        return livreRepository.findByIdAndEtatLibelleIn(id, etatsempruntables).orElseThrow(() -> new ElementNotFoundException("Livre non trouvé (id: " + id + ")"));
     }
 }

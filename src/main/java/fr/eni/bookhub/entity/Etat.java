@@ -15,7 +15,16 @@ public class Etat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private String libelle;
+    private Code libelle;
+
+    public enum Code {
+        DISPONIBLE,
+        RESERVE,
+        EMPRUNTE,
+        INUTILISABLE
+    }
 
 }
+

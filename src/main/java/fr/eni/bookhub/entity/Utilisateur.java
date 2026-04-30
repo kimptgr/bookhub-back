@@ -1,9 +1,11 @@
 package fr.eni.bookhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,15 +29,21 @@ public class Utilisateur implements Serializable , UserDetails {
 
     private String prenom;
 
+    // String pour être sur de garder le 0 devant et varchar(20) si les gens mettent des point, des tirets ou que numéro international
+    private String telephone;
+
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String motDePasseChiffre;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "utilisateur")
     private List<Reservation> reservations;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "utilisateur")
     private List<Emprunt> emprunts;
 

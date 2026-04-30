@@ -1,0 +1,25 @@
+meta {
+  name: emprunt_200_rendre
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{BASE_URL}}/emprunts/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idEmprunt": 1,
+    "idLivre": 1,
+    "idEmprunteur": 1,
+    "dateRetour": "2026-04-28T07:46:15.553Z"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

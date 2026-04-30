@@ -1,0 +1,28 @@
+meta {
+  name: connexion
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{BASE_URL}}/auth/connexion
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "mtartine@dej.com",
+    "password": "Aaaaaaaaaa1+"
+  }
+}
+
+script:post-response {
+  let data = res.getBody();
+  bru.setVar("ACCESS_TOKEN", data.token, { persist: true });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

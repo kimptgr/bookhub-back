@@ -1,0 +1,28 @@
+meta {
+  name: connexion admin
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{BASE_URL}}/auth/connexion
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "super@admin.com",
+    "password": "Aaaaaaaaaa1+"
+  }
+}
+
+script:post-response {
+  let data = res.getBody();
+  bru.setEnvVar("ACCESS_TOKEN", data.token, { persist: true });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

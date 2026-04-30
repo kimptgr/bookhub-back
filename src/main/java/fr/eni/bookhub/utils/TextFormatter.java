@@ -4,6 +4,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TextFormatter {
+    private TextFormatter() {
+        /* This utility class should not be instantiated */
+    }
+
     public static String convertToTitleCase(String text) {
         if (text == null || text.isEmpty()) {
             return text;
@@ -28,6 +32,6 @@ public class TextFormatter {
     }
 
     public static String isbnFormatter(String isbn) {
-        return isbn.replace("-", "").trim().toUpperCase();
+        return isbn.replaceAll("[ -]", "");
     }
 }

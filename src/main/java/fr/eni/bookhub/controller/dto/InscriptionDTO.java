@@ -21,6 +21,10 @@ public record InscriptionDTO(
                 regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{12,}$",
                 message = "Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial"
         )
-        String password
+        String password,
+
+        @Pattern(regexp = "^(0|\\+33[ .-]?0?)\\d([ .-]?\\d{2}){4}$",
+                message = "Numéro de téléphone invalide")
+                String telephone
 ) {
 }

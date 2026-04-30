@@ -1,0 +1,23 @@
+meta {
+  name: emprunt_401_doublefile
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/emprunts
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "emprunteurId": 3,
+    "livreId": 5
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

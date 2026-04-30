@@ -2,39 +2,47 @@ package fr.eni.bookhub.specification;
 
 import fr.eni.bookhub.controller.dto.RechercheDTO;
 import fr.eni.bookhub.entity.Auteur;
+import fr.eni.bookhub.entity.Etat;
 import fr.eni.bookhub.entity.Genre;
 import fr.eni.bookhub.entity.Livre;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class LivreSpecification {
 
     /**
-     * Crée une Spécification, c'est un système de filtrage géré par JPA qui filtre par Genre et/ou État
-     * @param rechercheDTO
+     * Crée une Spécification, c'est un système de filtrage dynamique qui peut être interprété par JPA, celui-ci filtre par Genre et/ou État et/ou Titre et/ou Nom d'auteur⋅ice
+     *
      * @see <a href="https://medium.com/devxtalks/implementing-pagination-sorting-and-filtering-in-spring-boot-42615dbd74a7">Exemple sur medium dont je me suis inspiré</a>
      */
-    public static Specification<Livre> getSpecificationsForGenreAndEtat(RechercheDTO rechercheDTO) {
+    public Specification<Livre> getSpecificationsForGenreOuEtatOuTitreOuNomAuteur(RechercheDTO rechercheDTO) {
 
         return (root, query, criteriaBuilder) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            // Si on a un critère sur l'état
-            if (rechercheDTO.disponibilite() != null && !rechercheDTO.disponibilite().isBlank()) {
-                predicates.add(criteriaBuilder.equal(root.get("etat").get("libelle"), rechercheDTO.disponibilite()));
+            // Si on a un critère sur l'état, on l'applique
+            if (rechercheDTO.libellesEtats() != null && rechercheDTO.libellesEtats().length > 0) {
+                Join<Livre, Etat> etatJoin = root.join("etat");
+                predicates.add(etatJoin.get("libelle").in((Object[]) rechercheDTO.libellesEtats()));
+
+            } else {
+                // Sinon, on ne remonte pas les livres inutilisables
+                predicates.add(criteriaBuilder.notEqual(root.get("etat").get("libelle"), Etat.Code.INUTILISABLE));
             }
 
-            // Si on a un critère sur l'état
-            if (rechercheDTO.genres() != null && rechercheDTO.genres().length > 0 && !rechercheDTO.genres()[0].isBlank()) {
+            // Si on a un critère sur les genres, on l'applique
+            if (rechercheDTO.libellesGenres() != null && rechercheDTO.libellesGenres().length > 0 && !rechercheDTO.libellesGenres()[0].isBlank()) {
                 Join<Livre, Genre> genreJoin = root.join("genres");
-                predicates.add(genreJoin.get("libelle").in((Object[]) rechercheDTO.genres()));
+                predicates.add(genreJoin.get("libelle").in((Object[]) rechercheDTO.libellesGenres()));
 
-                // Évite les duplicats si le livre correspond à deux états
+                // On évite les duplicats si le livre correspond à deux genres
                 query.distinct(true);
             }
 
@@ -51,16 +59,15 @@ public class LivreSpecification {
                 predicates.add(criteriaBuilder.or(titreLike, auteurLike));
             }
 
-            // On retourne un Predicat qui combine toutes les restrictions qu'on a défini
+            // On retourne un Predicat qui combine toutes les restrictions qu'on a définies
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
     /**
-     * Crée une Spécification, c'est un système de filtrage géré par JPA qui filtre par isbn
-     * @param isbn
+     * Crée une Spécification, c'est un système de filtrage dynamique qui peut être interprété par JPA, celui-ci filtre par isbn
      */
-    public static Specification<Livre> getSpecificationsForIsbn(String isbn) {
+    public Specification<Livre> getSpecificationsForIsbn(String isbn) {
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.equal(root.get("isbn"), isbn);
     }

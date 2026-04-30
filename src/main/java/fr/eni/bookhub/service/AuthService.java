@@ -6,6 +6,7 @@ import fr.eni.bookhub.controller.dto.InscriptionDTO;
 import fr.eni.bookhub.entity.Utilisateur;
 import fr.eni.bookhub.exception.EmailDejaUtiliseException;
 import fr.eni.bookhub.repository.UtilisateurRepository;
+import fr.eni.bookhub.utils.TelephoneFormatter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,6 +41,7 @@ public class AuthService {
         utilisateur.setMotDePasseChiffre(passwordEncoder.encode(request.password()));
         utilisateur.setRole(Utilisateur.Role.UTILISATEUR);
         utilisateur.setDesactive(false);
+        utilisateur.setTelephone(request.telephone() != null ? TelephoneFormatter.normaliser(request.telephone()) : null);
 
         utilisateurRepository.save(utilisateur);
     }

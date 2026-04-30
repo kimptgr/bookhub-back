@@ -1,8 +1,12 @@
 package fr.eni.bookhub.repository;
 
+import fr.eni.bookhub.controller.dto.UtilisateurResponseDTO;
 import fr.eni.bookhub.entity.Utilisateur;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
@@ -11,4 +15,15 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     Optional<Utilisateur> findByEmail(String email);
     boolean existsByEmail(String email);
 
+    Optional<Utilisateur> findByIdAndDesactiveIsFalse(Long id);
+
+    //permet de lister et trier les utilisateurs par nom
+    List<Utilisateur> findAllByOrderByNomAsc();
+
+    @Query(
+        """
+           SELECT u.id, u.email FROM Utilisateur u WHERE u.desactive = false
+        """
+    )
+   List<UtilisateurResponseDTO> findAllAndAndDesactiveIsFalse();
 }

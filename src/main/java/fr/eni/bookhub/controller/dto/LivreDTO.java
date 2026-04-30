@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-public record LivreDTO(
+public record LivreDTO (
         @Valid
         @NotEmpty
         List<AuteurDTO> auteurs,

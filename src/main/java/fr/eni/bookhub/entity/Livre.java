@@ -1,7 +1,9 @@
 package fr.eni.bookhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @Table(name = "livres")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Data
 public class Livre {
     @Id
@@ -36,8 +39,8 @@ public class Livre {
 
     @ManyToMany
     @JoinTable(name = "livres_genres",
-            joinColumns = @JoinColumn(name = "id_genre"),
-            inverseJoinColumns = @JoinColumn(name = "id_livre")
+            joinColumns = @JoinColumn(name = "id_livre"),
+            inverseJoinColumns = @JoinColumn(name = "id_genre")
     )
     @Column(nullable = false)
     private List<Genre> genres;
@@ -49,8 +52,12 @@ public class Livre {
     @JoinColumn(name = "id_etat", nullable = false)
     private Etat etat;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "livre")
     private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "livre")
+    private List<Emprunt> emprunts;
 
     @OneToMany
     @JoinColumn(name = "id_livre", nullable = false)

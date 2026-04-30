@@ -1,0 +1,23 @@
+meta {
+  name: reservations_201
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{BASE_URL}}/reservations
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "reservateurId": 1,
+    "livreId": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
