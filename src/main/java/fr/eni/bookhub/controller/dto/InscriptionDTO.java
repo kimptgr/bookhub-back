@@ -1,8 +1,10 @@
 package fr.eni.bookhub.controller.dto;
 
+import fr.eni.bookhub.validator.MotDePasseIdentiques;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+@MotDePasseIdentiques
 public record InscriptionDTO(
         @NotBlank
         String nom,
@@ -23,7 +25,9 @@ public record InscriptionDTO(
         )
         String password,
 
-        @Pattern(regexp = "^(0|\\+33[ .-]?0?)\\d([ .-]?\\d{2}){4}$",
+        @NotBlank String confirmPassword,
+
+        @Pattern(regexp = "^(0|\\+33[ .-]?0?)\\d([ .-]?\\d{2}){4}$|^$",
                 message = "Numéro de téléphone invalide")
                 String telephone
 ) {
